@@ -1,4 +1,4 @@
-.container {
+/* .container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,6 +10,7 @@
     background-color: #fff;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    height: 100%;
 }
 
 form {
@@ -48,10 +49,10 @@ button,
     font-weight: bold;
 }
 
-/* Hover Styles */
+
 .read-more:hover,
 button:hover,
 .details a:hover,
 .car-card a:hover {
     background-color: #555;
-}
+} */

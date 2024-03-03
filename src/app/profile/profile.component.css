@@ -1,18 +1,4 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    margin: auto;
-    width: 100%;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
 .profile img {
     width: 10%;
-    padding: 20px
+    padding: 20px;
 }
