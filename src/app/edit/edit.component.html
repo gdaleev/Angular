@@ -1,0 +1,21 @@
+<section class="container">
+    <h2>EDIT</h2>
+    <!-- Form for editing an existing article -->
+    <form action="backend-edit-endpoint" method="post">
+      <label for="title">Title:</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        value="Article Title"
+        required
+      />
+
+      <label for="content">Content:</label>
+      <textarea id="content" name="content" rows="4" required>
+This is the content of the article.</textarea
+      >
+
+      <button type="submit" class="btn">Save Changes</button>
+    </form>
+  </section>

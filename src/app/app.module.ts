@@ -3,14 +3,44 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HeaderComponent } from './header/header.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { MainContainerComponent } from './main-container/main-container.component';
+import { FooterComponent } from './footer/footer.component';
+import { HomeComponent } from './home/home.component';
+import { NewsComponent } from './news/news.component';
+import { AboutComponent } from './about/about.component';
+import { ContactComponent } from './contact/contact.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { ProfileComponent } from './profile/profile.component';
+import { FavouritesComponent } from './favourites/favourites.component';
+import { CreateComponent } from './create/create.component';
+import { DetailsComponent } from './details/details.component';
+import { EditComponent } from './edit/edit.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderComponent,
+    NavigationComponent,
+    MainContainerComponent,
+    FooterComponent,
+    HomeComponent,
+    NewsComponent,
+    AboutComponent,
+    ContactComponent,
+    LoginComponent,
+    RegisterComponent,
+    ProfileComponent,
+    FavouritesComponent,
+    CreateComponent,
+    DetailsComponent,
+    EditComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
