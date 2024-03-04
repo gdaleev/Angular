@@ -16,3 +16,22 @@ nav a {
 nav a:hover {
     color: #ff9900;
 } */
+
+nav {
+    background-color: #444;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fff;
+    margin: 0 20px;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+nav a:hover {
+    color: #ff9900;
+}

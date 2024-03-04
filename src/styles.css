@@ -21,7 +21,7 @@ body {
 }
 
 /* Header Styles */
-header {
+/* header {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,15 +30,15 @@ header {
     padding: 10px 0;
     text-align: center;
     width: 100%;
-}
+} */
 
-header img {
+/* header img {
     width: 100px;
     margin-right: 20px;
-}
+} */
 
 /* Navigation Styles */
-nav {
+/* nav {
     background-color: #444;
     padding: 10px;
     text-align: center;
@@ -55,7 +55,7 @@ nav a {
 
 nav a:hover {
     color: #ff9900;
-}
+} */
 
 /* Container Styles */
 .container {
@@ -75,19 +75,19 @@ nav a:hover {
 }
 
 /* Footer Styles */
-footer {
+/* footer {
     background-color: #333;
     color: #fff;
     text-align: center;
     padding: 10px;
     width: 100%;
     margin-top: auto;
-}
+} */
 
 /* Heading Styles */
-h1.header {
+/* h1.header {
     color: #fff;
-}
+} */
 
 h1, h2, h3 {
     color: #333;
