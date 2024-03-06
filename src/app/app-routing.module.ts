@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-import { HomeComponent } from './home/home.component';
-import { NewsComponent } from './news/news.component';
-import { AboutComponent } from './about/about.component';
-import { ContactComponent } from './contact/contact.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { ProfileComponent } from './profile/profile.component';
-import { FavouritesComponent } from './favourites/favourites.component';
-import { CreateComponent } from './create/create.component';
-import { DetailsComponent } from './details/details.component';
-import { EditComponent } from './edit/edit.component';
+import { NewsComponent } from './information/news/news.component';
+import { AboutComponent } from './information/about/about.component';
+import { ContactComponent } from './information/contact/contact.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { ProfileComponent } from './auth/profile/profile.component';
+import { FavouritesComponent } from './management/favourites/favourites.component';
+import { CreateComponent } from './management/create/create.component';
+import { DetailsComponent } from './management/details/details.component';
+import { EditComponent } from './management/edit/edit.component';
+import { HomeComponent } from './home/home-comp/home.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},

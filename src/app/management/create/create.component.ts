@@ -1,21 +1,21 @@
 import { Component } from '@angular/core';
-import { NewsService } from '../news/news.service';
+import { NewsService } from '../../information/news/news.service';
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
-  styleUrls: ['./create.component.css']
+  styleUrls: ['./create.component.css'],
+  providers: [NewsService]
 })
 
 export class CreateComponent {
-  articles!: any[];
-  // articles: any[] = [];
+  articles: any[] = [];
   newArticle: any = {};
   
   constructor(private newsService: NewsService) {}
 
   addNewsArticle() {
-    this.newsService.addNewsArticle(this.newArticle).subscribe((article) => {
+    this.newsService.addNewsArticle(this.newArticle).subscribe((article: any) => {
       if (this.articles === undefined) {
         this.articles = []
       } 

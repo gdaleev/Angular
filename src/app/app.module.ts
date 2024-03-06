@@ -3,47 +3,29 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component';
-import { NavigationComponent } from './navigation/navigation.component';
-import { MainContainerComponent } from './main-container/main-container.component';
-import { FooterComponent } from './footer/footer.component';
-import { HomeComponent } from './home/home.component';
-import { NewsComponent } from './news/news.component';
-import { AboutComponent } from './about/about.component';
-import { ContactComponent } from './contact/contact.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { ProfileComponent } from './profile/profile.component';
-import { FavouritesComponent } from './favourites/favourites.component';
-import { CreateComponent } from './create/create.component';
-import { DetailsComponent } from './details/details.component';
-import { EditComponent } from './edit/edit.component';
 import { FormsModule } from '@angular/forms';
+import { SharedModule } from './shared/shared.module';
+import { CoreModule } from './core/core.module';
+import { HomeModule } from './home/home.module';
+import { InformationModule } from './information/information.module';
+import { AuthModule } from './auth/auth.module';
+import { ManagementModule } from './management/management.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HeaderComponent,
-    NavigationComponent,
-    MainContainerComponent,
-    FooterComponent,
-    HomeComponent,
-    NewsComponent,
-    AboutComponent,
-    ContactComponent,
-    LoginComponent,
-    RegisterComponent,
-    ProfileComponent,
-    FavouritesComponent,
-    CreateComponent,
-    DetailsComponent,
-    EditComponent
+    AppComponent
   ],
   imports: [
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    SharedModule, 
+    CoreModule,
+    HomeModule,
+    InformationModule,
+    AuthModule,
+    ManagementModule
   ],
   providers: [],
   bootstrap: [AppComponent]
