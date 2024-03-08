@@ -18,6 +18,7 @@ export class LoginComponent {
       this.authService.loginUser(this.userData).subscribe(
         (response) => {
           console.log('Login successful:', response);
+          this.authService.saveToken(response.token)
           // Optionally, you can redirect or perform other actions upon successful login
         },
         (error) => {

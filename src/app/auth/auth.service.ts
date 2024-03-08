@@ -24,4 +24,18 @@ export class AuthService {
       catchError((error) => throwError(error))
     );
   }
+
+  saveToken(token: string): void {
+    localStorage.setItem('jwt', token);
+  }
+
+  // Get token from localStorage
+  private getToken(): string | null {
+    return localStorage.getItem('jwt');
+  }
+
+  // Remove token from localStorage
+  removeToken(): void {
+    localStorage.removeItem('jwt');
+  }
 }
