@@ -1,20 +1,21 @@
 <section class="container">
     <h2>REGISTER</h2>
-    <form action="register-backend-endpoint" method="post">
+    <form (submit)="onSubmit()" method="post">
       <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required />
+      <input [(ngModel)]="userData.username" type="text" id="username"  name="username" required />
 
       <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required />
+      <input [(ngModel)]="userData.email" type="email" id="email"  name="email" required />
 
       <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required />
+      <input [(ngModel)]="userData.password" type="password" id="password"  name="password" required />
 
-      <label for="confirm-password">Confirm Password:</label>
+      <label for="rePassword">Confirm Password:</label>
       <input
         type="password"
-        id="confirm-password"
-        name="confirm-password"
+        id="rePassword"
+        [(ngModel)]="userData.rePassword"
+        name="rePassword"
         required
       />
 

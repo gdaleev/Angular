@@ -140,6 +140,7 @@ button,
     text-decoration: none;
     margin-bottom: 10px;
     font-weight: bold;
+    transition: color 0.3s ease-in-out;
 }
 
 /* Hover Styles */
@@ -147,7 +148,7 @@ button,
 button:hover,
 .details a:hover,
 .car-card a:hover {
-    background-color: #555;
+    color: red;
 }
 
 /* Form Styles */
