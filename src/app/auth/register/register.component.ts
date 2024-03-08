@@ -22,7 +22,7 @@ export class RegisterComponent {
     this.subscription.add(
       this.authService.registerUser(this.userData).subscribe(
         (response) => {
-          // console.log('Registration successful:', response);
+          console.log('Registration successful:', response);
         },
         (error) => {
           console.error('Registration failed:', error);

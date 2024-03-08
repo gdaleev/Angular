@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,10 +21,40 @@ const newsArticleSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
-  username: String,
-  email: String,
+  username: {
+    type: String,
+    unique: true,
+  },
+  email: {
+    type: String,
+    unique: true,
+  },
   password: String
 })
+
+userSchema.pre("save", async function (next) {
+  const user = this;
+
+  if (!user.isModified("password")) {
+    return next();
+  }
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+
+    const hashedPassword = await bcrypt.hash(user.password, salt);
+
+    user.password = hashedPassword;
+
+    next();
+  } catch (error) {
+    return next(error);
+  }
+});
+
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
 
 const NewsArticle = mongoose.model("NewsArticle", newsArticleSchema);
 const User = mongoose.model("User", userSchema)
@@ -47,19 +78,6 @@ app.post("/api/register", async (req, res) => {
       password: req.body.password,
     });
 
-    const payloads = { username: newUser.username, email: newUser.email, userId: newUser._id };
-    const options = { expiresIn: "2d" };
-    const secret = "MySuperPrivateSecret";
-    const token = jwt.sign(payloads, secret, options);
-
-    res.cookie("jwt", token, {
-      httpOnly: false,
-      sameSite: "None",
-      secure: true,
-      maxAge: 2 * 24 * 60 * 60 * 1000,
-      path: "/",
-    });
-
     await newUser.save();
 
     res.json(newUser);
@@ -69,7 +87,7 @@ app.post("/api/register", async (req, res) => {
     // let errors = [];
 
     // if (error.code === 11000) {
-    //   errors.push("Email already in use!");
+    //   errors.push("username already in use!");
     //   return res.render("register", { errors, layout: "main" });
     // }
 
@@ -80,6 +98,38 @@ app.post("/api/register", async (req, res) => {
     // }
   }
 })
+
+app.post("/api/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    if (!username || !password) {
+      throw new Error("Username and password are required!");
+    }
+
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      throw new Error("Invalid username!");
+    }
+
+    const isPasswordValid = await user.comparePassword(password);
+
+    if (!isPasswordValid) {
+      throw new Error("Invalid password!");
+    }
+
+    const payload = { username: user.username, userId: user._id };
+    const options = { expiresIn: "2d" };
+    const secret = "MySuperPrivateSecret";
+    const token = jwt.sign(payload, secret, options);
+
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error("Error in login:", error);
+    res.status(401).json({ error: "Authentication failed", details: error.message });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

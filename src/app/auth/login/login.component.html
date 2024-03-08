@@ -1,11 +1,11 @@
 <section class="container">
     <h2>LOGIN</h2>
-    <form action="login-backend-endpoint" method="post">
+    <form (ngSubmit)="onSubmit()" method="post">
       <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required />
+      <input [(ngModel)]="userData.username" type="text" id="username" name="username" required />
 
       <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required />
+      <input [(ngModel)]="userData.password" type="password" id="password" name="password" required />
 
       <button type="submit" class="btn">Login</button>
     </form>
