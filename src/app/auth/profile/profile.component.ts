@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TokenService } from '../token.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,11 +8,11 @@ import { TokenService } from '../token.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  decodedToken: any = {}
+  userData: any = {}
   
-  constructor(private tokenService: TokenService) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.decodedToken = this.tokenService.decodedToken;
+    this.userData = this.authService.getUserData()
   }
 }

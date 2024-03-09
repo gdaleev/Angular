@@ -25,17 +25,22 @@ export class AuthService {
     );
   }
 
-  saveToken(token: string): void {
-    localStorage.setItem('jwt', token);
+  // Get user data from localStorage
+  getUserData(): any | null {
+    const userDataString = localStorage.getItem('userData');
+    return userDataString ? JSON.parse(userDataString) : null;
   }
 
-  // Get token from localStorage
-  private getToken(): string | null {
-    return localStorage.getItem('jwt');
+  clearUserData(): void {
+    localStorage.removeItem('userData');
   }
 
-  // Remove token from localStorage
-  removeToken(): void {
-    localStorage.removeItem('jwt');
-  }
+  // decodeToken(token: string): any | null {
+  //   if (token) {
+  //     const decodedToken = jwtDecode(token)
+  //     return decodedToken;
+  //   }
+
+  //   return null
+  // }
 }

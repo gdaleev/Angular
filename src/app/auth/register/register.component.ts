@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +12,7 @@ export class RegisterComponent {
   userData: any = {};
   private subscription: Subscription = new Subscription();
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
   
   onSubmit(): void {
     if (this.userData.password !== this.userData.rePassword) {
@@ -23,6 +24,7 @@ export class RegisterComponent {
       this.authService.registerUser(this.userData).subscribe(
         (response) => {
           console.log('Registration successful:', response);
+          this.router.navigate(['/login'])
         },
         (error) => {
           console.error('Registration failed:', error);
