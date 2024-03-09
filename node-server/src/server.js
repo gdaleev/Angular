@@ -119,11 +119,11 @@ app.post("/api/login", async (req, res) => {
       throw new Error("Invalid password!");
     }
 
-    const payload = { username: user.username, userId: user._id };
+    const payload = { username: user.username, email: user.email, userId: user._id };
     const options = { expiresIn: "2d" };
     const secret = "MySuperPrivateSecret";
     const token = jwt.sign(payload, secret, options);
-
+    
     res.status(200).json({ token });
   } catch (error) {
     console.error("Error in login:", error);
