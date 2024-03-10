@@ -18,6 +18,10 @@ const newsArticleSchema = new mongoose.Schema({
   imgUrl: String,
   title: String,
   content: String,
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 });
 
 const userSchema = new mongoose.Schema({
@@ -64,11 +68,45 @@ app.get("/api/news", async (req, res) => {
   res.json(newsArticles);
 });
 
+// app.post("/api/news", async (req, res) => {
+//   const newsArticle = new NewsArticle(req.body);
+//   await newsArticle.save();
+//   res.json(newsArticle);
+// });
+
 app.post("/api/news", async (req, res) => {
-  const newsArticle = new NewsArticle(req.body);
-  await newsArticle.save();
-  res.json(newsArticle);
+  try {
+    const authorizationHeader = req.headers.authorization;
+    if (!authorizationHeader) {
+      throw new Error("Authorization header is missing");
+    }
+
+    const token = authorizationHeader.split(" ")[1];
+    console.log(token);
+    if (!token) {
+      throw new Error("Invalid Authorization header format");
+    }
+    
+    // Verify the token and extract user information
+    const decodedToken = jwt.verify(token, "MySuperPrivateSecret");
+    const ownerId = decodedToken.userId;
+
+    // Create a new news article with ownerId
+    const newsArticle = new NewsArticle({
+      ...req.body,
+      ownerId: ownerId,
+    });
+
+    // Save the news article to the database
+    await newsArticle.save();
+
+    res.json(newsArticle);
+  } catch (error) {
+    console.error("Error in creating news article:", error);
+    res.status(500).json({ error: "Error in creating news article", details: error.message });
+  }
 });
+
 
 app.post("/api/register", async (req, res) => {
   try {
@@ -123,7 +161,7 @@ app.post("/api/login", async (req, res) => {
     const options = { expiresIn: "2d" };
     const secret = "MySuperPrivateSecret";
     const token = jwt.sign(payload, secret, options);
-    
+
     res.status(200).json({ token });
   } catch (error) {
     console.error("Error in login:", error);

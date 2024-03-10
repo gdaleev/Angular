@@ -13,12 +13,14 @@ export class NavigationComponent {
 
   constructor(
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private authService: AuthService
   ) {}
 
   logout(): void {
     this.isAuthenticated = false;
     this.tokenService.removeToken();
+    this.authService.clearUserData();
     // Optionally, navigate to another page after logout
     this.router.navigate(['/']);
   }
