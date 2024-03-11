@@ -22,12 +22,12 @@ export class LoginComponent {
       this.authService.loginUser(this.userData).subscribe(
         (response) => {
           console.log('Login successful:', response);
-          this.tokenService.saveTokenAndUserData(response.token);
-          this.decodedToken = jwtDecode(response.token);
-          // this.tokenService.decodedToken = jwtDecode(response.token)
-          this.tokenService.tokenExpiration = this.decodedToken.exp;
+          this.tokenService.saveCookie(response.token);
+          // this.decodedToken = jwtDecode(response.token);
+          // this.tokenService.setTokenExpiration(this.decodedToken.exp)
+          // console.log(this.decodedToken);
+          // console.log(this.decodedToken.exp);
           this.router.navigate(["/"])
-          // Optionally, you can redirect or perform other actions upon successful login
         },
         (error) => {
           console.error('Login failed:', error);

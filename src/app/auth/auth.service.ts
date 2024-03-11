@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { TokenService } from './token.service';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class AuthService {
   token: string | null = null;
 
   constructor(private http: HttpClient, private tokenService: TokenService) {
-    this.token = this.tokenService.getToken();
+    // this.token = this.tokenService.getToken();
   }
 
   registerUser(userData: any): Observable<any> {
@@ -22,36 +22,49 @@ export class AuthService {
       .pipe(catchError((error) => throwError(error)));
   }
 
+  // loginUser(userData: any): Observable<any> {
+  //   const loginUrl = `${this.apiUrl}/login`;
+
+  //   return this.http.post<any>(loginUrl, userData, {
+  //     headers: new HttpHeaders({
+  //       'Authorization': `Bearer ${this.token}`
+  //     })
+  //   }).pipe(
+  //     catchError((error) => throwError(error))
+  //   );
+  // }
+
   loginUser(userData: any): Observable<any> {
     const loginUrl = `${this.apiUrl}/login`;
-    
-    return this.http.post<any>(loginUrl, userData, {
-      headers: new HttpHeaders({
-        'Authorization': `Bearer ${this.token}`
-      })
-    }).pipe(
-      catchError((error) => throwError(error))
-    );
+
+    return this.http
+      .post<any>(loginUrl, userData, { withCredentials: true })
+      .pipe(
+        catchError((error) => throwError(error)),
+        tap((response) => {
+          this.tokenService.saveCookie(response.token);
+        })
+      );
   }
 
   getAuthorizationHeader(): HttpHeaders {
     const token = this.tokenService.getToken();
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
   }
 
   // Get user data from localStorage
-  getUserData(): any | null {
-    const userDataString = localStorage.getItem('userData');
-    return userDataString ? JSON.parse(userDataString) : null;
+  getUserData(): Observable<any | null> {
+    const userDataUrl = `${this.apiUrl}/get-user-data`;
+    return this.http.get<any>(userDataUrl, { withCredentials: true });
   }
 
-  clearUserData(): void {
-    const userDataString = localStorage.getItem('userData');
-    localStorage.removeItem('userData');
-  }
+  // clearUserData(): void {
+  //   const userDataString = localStorage.getItem('userData');
+  //   localStorage.removeItem('userData');
+  // }
 
   // decodeToken(token: string): any | null {
   //   if (token) {

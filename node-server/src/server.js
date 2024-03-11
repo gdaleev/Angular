@@ -4,11 +4,19 @@ const bodyParser = require("body-parser");
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const cookieParser = require("cookie-parser")
 
 const app = express();
+app.use(cookieParser());
 const port = process.env.PORT || 3000;
+const secret = "MySuperPrivateSecret";
 
-app.use(cors())
+app.use(cors({ 
+  origin: 'http://localhost:4200',  // Adjust this to your Angular app's origin
+  credentials: true,  // Allow credentials (cookies)
+}));
+
+
 
 mongoose.connect("mongodb://127.0.0.1:27017/auto-insight");
 
@@ -74,21 +82,51 @@ app.get("/api/news", async (req, res) => {
 //   res.json(newsArticle);
 // });
 
+// app.post("/api/news", async (req, res) => {
+//   try {
+//     const authorizationHeader = req.headers.authorization;
+//     if (!authorizationHeader) {
+//       throw new Error("Authorization header is missing");
+//     }
+
+//     const token = authorizationHeader.split(" ")[1];
+//     console.log(token);
+//     if (!token) {
+//       throw new Error("Invalid Authorization header format");
+//     }
+    
+//     // Verify the token and extract user information
+//     const decodedToken = jwt.verify(token, "MySuperPrivateSecret");
+//     const ownerId = decodedToken.userId;
+
+//     // Create a new news article with ownerId
+//     const newsArticle = new NewsArticle({
+//       ...req.body,
+//       ownerId: ownerId,
+//     });
+
+//     // Save the news article to the database
+//     await newsArticle.save();
+
+//     res.json(newsArticle);
+//   } catch (error) {
+//     console.error("Error in creating news article:", error);
+//     res.status(500).json({ error: "Error in creating news article", details: error.message });
+//   }
+// });
+
+
 app.post("/api/news", async (req, res) => {
   try {
-    const authorizationHeader = req.headers.authorization;
-    if (!authorizationHeader) {
-      throw new Error("Authorization header is missing");
-    }
+    // TODO: Fix logout and missing cookie on article creation
+    const tokenCookie = req.cookies.jwt;
 
-    const token = authorizationHeader.split(" ")[1];
-    console.log(token);
-    if (!token) {
-      throw new Error("Invalid Authorization header format");
+    if (!tokenCookie) {
+      throw new Error("Cookie is missing");
     }
-    
+    console.log('Received token:', tokenCookie);
     // Verify the token and extract user information
-    const decodedToken = jwt.verify(token, "MySuperPrivateSecret");
+    const decodedToken = jwt.verify(tokenCookie, "MySuperPrivateSecret");
     const ownerId = decodedToken.userId;
 
     // Create a new news article with ownerId
@@ -106,7 +144,6 @@ app.post("/api/news", async (req, res) => {
     res.status(500).json({ error: "Error in creating news article", details: error.message });
   }
 });
-
 
 app.post("/api/register", async (req, res) => {
   try {
@@ -159,14 +196,67 @@ app.post("/api/login", async (req, res) => {
 
     const payload = { username: user.username, email: user.email, userId: user._id };
     const options = { expiresIn: "2d" };
-    const secret = "MySuperPrivateSecret";
+    
     const token = jwt.sign(payload, secret, options);
+    res.cookie('jwt', token, { httpOnly: true });
 
     res.status(200).json({ token });
   } catch (error) {
     console.error("Error in login:", error);
     res.status(401).json({ error: "Authentication failed", details: error.message });
   }
+});
+
+app.get("/api/get-token", async (req, res) => {
+  const tokenCookie = req.cookies.jwt;
+
+  console.log('Received request to /api/get-token. Token Cookie:', tokenCookie);
+
+  if (!tokenCookie) {
+    console.log('Token not found. Sending 401 Unauthorized response.');
+    return res.status(401).json({ message: 'Token not found' });
+  }
+
+  try {
+    console.log('Attempting to verify and decode the token...');
+    const decodedToken = jwt.verify(tokenCookie, secret);
+
+    // Extract relevant information if needed
+    console.log('Token verification successful. Decoded Token:', decodedToken);
+
+    res.json({ decodedToken });
+  } catch (error) {
+    console.error('Token Verification Error:', error);
+    console.log('Sending 401 Unauthorized response due to token verification error.');
+    res.status(401).json({ message: 'Invalid token' });
+  }
+});
+
+
+
+
+app.get("/api/get-user-data", async (req, res) => {
+  const tokenCookie = req.cookies.jwt
+
+  if (!tokenCookie) {
+    return res.status(401).json({ message: 'Token not found' });
+  }
+
+  try {
+    // Verify and decode the JWT token
+    const decodedToken = jwt.verify(tokenCookie, secret);
+
+    // You can now use the decoded token data
+    res.json({ username: decodedToken.username, email: decodedToken.email });
+  } catch (error) {
+    // Handle token verification errors
+    res.status(401).json({ message: 'Invalid token' });
+  }
+})
+
+app.get('/logout', (req, res) => {
+  res.clearCookie('jwt'); // Clear the 'jwt' cookie
+  res.status(200).json({ message: 'Logout successful' });
 });
 
 app.listen(port, () => {

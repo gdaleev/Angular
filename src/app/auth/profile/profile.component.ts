@@ -1,5 +1,9 @@
+interface UserData {
+  username: string;
+  email: string;
+}
+
 import { Component, OnInit } from '@angular/core';
-import { TokenService } from '../token.service';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -8,11 +12,15 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  userData: any = {}
+  userData: UserData | null = null;
   
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.userData = this.authService.getUserData()
+    this.authService.getUserData().subscribe(
+      (response: UserData) => {
+        this.userData = response;
+      }
+    )
   }
 }
