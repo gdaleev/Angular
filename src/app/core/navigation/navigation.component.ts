@@ -20,7 +20,7 @@ export class NavigationComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('Cookies on Page Load:', document.cookie);
+    // console.log('Cookies on Page Load:', document.cookie);
     this.authenticationStatusSubscription = this.authService.authenticationStatus$.subscribe(
       (status)=>{
         this.isAuthenticated = status
@@ -36,7 +36,7 @@ export class NavigationComponent implements OnInit {
 
   logout(): void {
     console.log('Logout function called');
-    console.log('Current Cookies:', document.cookie);
+    // console.log('Current Cookies:', document.cookie);
     this.authService.logoutUser();
     this.router.navigate(['/']);
   }
@@ -46,7 +46,7 @@ export class NavigationComponent implements OnInit {
       (response) => {
         if (response) {
           // Check if the token is present and not expired
-          console.log('Decoded Token:', response.decodedToken);
+          // console.log('Decoded Token:', response.decodedToken);
           this.isAuthenticated =
             response.decodedToken.exp > Math.floor(Date.now() / 1000);
         } else {

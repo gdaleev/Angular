@@ -20,7 +20,7 @@ export class LoginComponent {
     this.subscription.add(
       this.authService.loginUser(this.userData).subscribe(
         (response) => {
-          console.log('Login successful:', response);
+          // console.log('Login successful:', response);
           if (response.token) {
             // Decode and set token expiration if needed
             // this.tokenService.setTokenExpiration(jwtDecode(response.token).exp);

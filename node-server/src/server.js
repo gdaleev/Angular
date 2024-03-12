@@ -125,13 +125,11 @@ app.get("/api/news", async (req, res) => {
 
 app.post("/api/news", async (req, res) => {
   try {
-    // TODO: Fix logout and missing cookie on article creation
     const tokenCookie = req.cookies.jwt;
-
+    
     if (!tokenCookie) {
       throw new Error("Cookie is missing");
     }
-    console.log('Received token:', tokenCookie);
     // Verify the token and extract user information
     const decodedToken = jwt.verify(tokenCookie, "MySuperPrivateSecret");
     const ownerId = decodedToken.userId;
@@ -230,7 +228,7 @@ app.post("/api/logout", async (req, res) => {
 app.get("/api/get-token", async (req, res) => {
   const tokenCookie = req.cookies.jwt;
 
-  console.log('Received request to /api/get-token. Token Cookie:', tokenCookie);
+  // console.log('Received request to /api/get-token. Token Cookie:', tokenCookie);
 
   if (!tokenCookie) {
     console.log('Token not found. Sending 401 Unauthorized response.');
@@ -238,11 +236,11 @@ app.get("/api/get-token", async (req, res) => {
   }
 
   try {
-    console.log('Attempting to verify and decode the token...');
+    // console.log('Attempting to verify and decode the token...');
     const decodedToken = jwt.verify(tokenCookie, secret);
 
     // Extract relevant information if needed
-    console.log('Token verification successful. Decoded Token:', decodedToken);
+    // console.log('Token verification successful. Decoded Token:', decodedToken);
 
     res.json({ decodedToken });
   } catch (error) {

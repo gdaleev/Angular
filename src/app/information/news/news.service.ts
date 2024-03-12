@@ -18,7 +18,7 @@ export class NewsService {
 
   addNewsArticle(news: any): Observable<any> {
     const headers = this.authService.getAuthorizationHeader();
-    return this.http.post<any>(`${this.apiUrl}`, news, {headers}).pipe(
+    return this.http.post<any>(`${this.apiUrl}`, news, {withCredentials: true}).pipe(
       catchError((error) => throwError(error))
     );
   }
