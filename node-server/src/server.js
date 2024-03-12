@@ -1,4 +1,5 @@
 const express = require("express");
+const session = require("express-session");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require('cors')
@@ -10,6 +11,12 @@ const app = express();
 app.use(cookieParser());
 const port = process.env.PORT || 3000;
 const secret = "MySuperPrivateSecret";
+
+app.use(session({
+  secret: "your-secret-key",
+  resave: false,
+  saveUninitialized: false,
+}));
 
 app.use(cors({ 
   origin: 'http://localhost:4200',  // Adjust this to your Angular app's origin
@@ -198,12 +205,25 @@ app.post("/api/login", async (req, res) => {
     const options = { expiresIn: "2d" };
     
     const token = jwt.sign(payload, secret, options);
-    res.cookie('jwt', token, { httpOnly: true });
-
+    // res.cookie('jwt', token);
+    
     res.status(200).json({ token });
   } catch (error) {
     console.error("Error in login:", error);
     res.status(401).json({ error: "Authentication failed", details: error.message });
+  }
+});
+
+app.post("/api/logout", async (req, res) => {
+  try {
+    // Clear user session data
+    req.session.destroy(() => {
+      res.clearCookie('jwt');
+      res.status(200).json({ message: 'Logout successful' });
+    });
+  } catch (error) {
+    console.error("Error in logout:", error);
+    res.status(500).json({ error: "Error in logout", details: error.message });
   }
 });
 
@@ -232,9 +252,6 @@ app.get("/api/get-token", async (req, res) => {
   }
 });
 
-
-
-
 app.get("/api/get-user-data", async (req, res) => {
   const tokenCookie = req.cookies.jwt
 
@@ -253,11 +270,6 @@ app.get("/api/get-user-data", async (req, res) => {
     res.status(401).json({ message: 'Invalid token' });
   }
 })
-
-app.get('/logout', (req, res) => {
-  res.clearCookie('jwt'); // Clear the 'jwt' cookie
-  res.status(200).json({ message: 'Logout successful' });
-});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

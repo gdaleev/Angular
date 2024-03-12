@@ -15,14 +15,15 @@ export class TokenService {
   // ? saveCookie and removeCookie in a separate service
 
   saveCookie(token: string): void {
-    document.cookie = `jwt=${token}; Path=/; HttpOnly; SameSite=Strict`;
+    document.cookie = `jwt=${token}; Path=/;`;
     // const decodedToken = jwtDecode(token);
     //localStorage.setItem('userData', JSON.stringify(decodedToken));
   }
 
-  removeCookie(): Observable<any> {
-    const logoutUrl = 'http://localhost:3000/logout';
-    return this.http.get<any>(logoutUrl, {});
+  clearToken(): Observable<any> {
+    const options = { withCredentials: true };
+    const clearTokenUrl = `${this.apiUrl}/logout`;
+    return this.http.post<any>(clearTokenUrl, {}, options);
   }
 
   getToken(): Observable<any> {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, Subject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { TokenService } from './token.service';
 
@@ -10,6 +10,8 @@ import { TokenService } from './token.service';
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api';
   token: string | null = null;
+  private authenticationStatusSubject = new Subject<boolean>();
+  authenticationStatus$ = this.authenticationStatusSubject.asObservable();
 
   constructor(private http: HttpClient, private tokenService: TokenService) {
     // this.token = this.tokenService.getToken();
@@ -43,8 +45,39 @@ export class AuthService {
         catchError((error) => throwError(error)),
         tap((response) => {
           this.tokenService.saveCookie(response.token);
+          this.notifyAuthenticationStatus(true)
         })
       );
+  }
+
+  logoutUser(): Observable<any> {
+    // Additional logic for clearing tokens on the server if needed
+    this.tokenService.clearToken().subscribe(
+      () => {
+        this.notifyAuthenticationStatus(false)
+      },
+      (error) => {
+        console.error('Error clearing token: ', error);
+        this.notifyAuthenticationStatus(false)
+        
+      }
+    )
+
+    return throwError('Logout failed')
+  }
+
+  // Other methods...
+
+  private saveCookie(token: string): void {
+    document.cookie = `jwt=${token}; Path=/;`;
+  }
+
+  private clearCookie(): void {
+    document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  }
+  
+  private notifyAuthenticationStatus(status: boolean): void {
+    this.authenticationStatusSubject.next(status);
   }
 
   getAuthorizationHeader(): HttpHeaders {
