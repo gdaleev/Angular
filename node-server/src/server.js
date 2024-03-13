@@ -252,7 +252,7 @@ app.get("/api/get-token", async (req, res) => {
 
 app.get("/api/get-user-data", async (req, res) => {
   const tokenCookie = req.cookies.jwt
-
+  
   if (!tokenCookie) {
     return res.status(401).json({ message: 'Token not found' });
   }
@@ -279,8 +279,17 @@ app.get("/api/news/details/:id", async (req, res) => {
       return;
     }
 
-    // const isAuthorized = newsArticle.ownerId && newsArticle.ownerId === req.user.userId;
-
+    const tokenCookie = req.cookies.jwt
+    
+    if (tokenCookie) {
+      const isAuthenticated = true;
+      const decodedToken = jwt.verify(tokenCookie, secret)
+    
+      const isAuthorized = newsArticle.ownerId && newsArticle.ownerId.toString() === decodedToken.userId;
+      
+      return res.json({newsArticle, isAuthorized, isAuthenticated})
+    }
+    
     res.json({newsArticle})
   } catch (error) {
     console.error(error);

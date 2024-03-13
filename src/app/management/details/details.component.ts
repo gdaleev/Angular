@@ -15,6 +15,8 @@ interface Article {
 })
 export class DetailsComponent {
   article!: Article;
+  isAuthenticated!: boolean;
+  isAuthorized!: boolean;
   constructor(private route: ActivatedRoute, private newsService: NewsService) {}
 
   ngOnInit() {
@@ -23,6 +25,8 @@ export class DetailsComponent {
 
       this.newsService.getNewsArticleDetails(articleId).subscribe((article) => {
         this.article = article.newsArticle;
+        this.isAuthenticated = article.isAuthenticated
+        this.isAuthorized = article.isAuthorized
       })
     })
   }

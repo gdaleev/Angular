@@ -9,9 +9,25 @@
     </p>
   
     <!-- Edit button linking to the edit page -->
-    <a routerLink="/edit">Edit Article</a>
-    <a routerLink="/add-fav">Add To Favorites</a>
+    <div *ngIf="isAuthorized; else notAuthorizedBlock">
+      <!-- Content to show when isAuthorized is true -->
+      <a routerLink="/edit">Edit Article</a>
+      <a routerLink="/delete">Delete Article</a>
+    </div>
+    
+    <ng-template #notAuthorizedBlock>
+      <div *ngIf="isAuthenticated; else noLinksBlock">
+        <!-- Content to show when isAuthenticated is true -->
+        <a routerLink="/add-fav">Add To Favorites</a>
+      </div>
+    
+      <ng-template #noLinksBlock>
+        <!-- Content to show when neither isAuthorized nor isAuthenticated is true -->
+      </ng-template>
+    </ng-template>
+    
+    
     <!-- Delete button (Note: In a real app, this should trigger a confirmation modal) -->
-    <a onclick="deleteArticle()">Delete Article</a>
+    
   </div>
 </section>

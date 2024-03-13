@@ -24,7 +24,7 @@ export class NewsService {
   }
 
   getNewsArticleDetails(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/details/${id}`).pipe(
+    return this.http.get<any>(`${this.apiUrl}/details/${id}`, {withCredentials: true}).pipe(
       catchError((error) => throwError(error))
     )
   }
