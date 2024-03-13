@@ -269,6 +269,25 @@ app.get("/api/get-user-data", async (req, res) => {
   }
 })
 
+app.get("/api/news/details/:id", async (req, res) => {
+  try {
+    const articleId = req.params.id;
+    const newsArticle = await NewsArticle.findById(articleId)
+
+    if (!newsArticle) {
+      res.status(404).send("Article not found");
+      return;
+    }
+
+    // const isAuthorized = newsArticle.ownerId && newsArticle.ownerId === req.user.userId;
+
+    res.json({newsArticle})
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error fetching article details");
+  }
+})
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

@@ -22,7 +22,7 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent},
   {path: 'favourites', component: FavouritesComponent},
   {path: 'create', component: CreateComponent},
-  {path: 'details', component: DetailsComponent},
+  {path: 'details/:id', component: DetailsComponent},
   {path: 'edit', component: EditComponent}
 ];
 

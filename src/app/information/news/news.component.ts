@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NewsService } from '../news/news.service';
 
+interface Article {
+  imgUrl: string;
+  title: string;
+  content: string;
+}
+
 @Component({
   selector: 'app-news',
   templateUrl: './news.component.html',
@@ -9,6 +15,7 @@ import { NewsService } from '../news/news.service';
 
 export class NewsComponent implements OnInit {
   articles!: any[];
+  article!: Article;
   // articles: any[] = [];
   // newArticle: any = {};
 
@@ -17,6 +24,12 @@ export class NewsComponent implements OnInit {
   ngOnInit() {
     this.newsService.getNews().subscribe((articles) => {
       this.articles = articles;
+    })
+  }
+
+  getNewsArticleDetails(articleId: string) {
+    this.newsService.getNewsArticleDetails(articleId).subscribe((article) => {
+      this.article = article.newsArticle;
     })
   }
 

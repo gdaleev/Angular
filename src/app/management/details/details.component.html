@@ -1,21 +1,17 @@
 <section class="container details">
-    <h2>DETAILS</h2>
-    <img
-      src="https://u4d2z7k9.rocketcdn.me/wp-content/uploads/2022/05/Untitled-1024-%C3%97-768px-6.jpg"
-      alt="News Image 1"
-    />
+  <div *ngIf="article">
+    <!-- <h2>DETAILS</h2> -->
+    <img [src]="article.imgUrl" alt="News Image 1" />
     <!-- Display details of the article -->
-    <h3>Exciting Breakthrough in Electric Vehicle Technology</h3>
+    <h3>{{ article.title }}</h3>
     <p>
-      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusamus
-      repudiandae dolorum id repellendus hic aliquam ad totam dicta, fugit
-      quaerat voluptatibus blanditiis excepturi, incidunt inventore amet omnis
-      necessitatibus. Ad, vero!
+      {{ article.content }}
     </p>
-
+  
     <!-- Edit button linking to the edit page -->
     <a routerLink="/edit">Edit Article</a>
     <a routerLink="/add-fav">Add To Favorites</a>
     <!-- Delete button (Note: In a real app, this should trigger a confirmation modal) -->
     <a onclick="deleteArticle()">Delete Article</a>
-  </section>
+  </div>
+</section>
