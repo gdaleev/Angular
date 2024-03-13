@@ -1,4 +1,13 @@
 .profile img {
-    width: 10%;
-    padding: 20px;
+  width: 10%;
+  padding: 20px;
+}
+
+.profile div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 20px;
 }
