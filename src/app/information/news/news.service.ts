@@ -32,4 +32,8 @@ export class NewsService {
   addArticleToUserFavorites(articleId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/favorites/${articleId}`,{}, {withCredentials: true})
   }
+
+  getFavoriteArticles(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/favorites`, {withCredentials: true})
+  }
 }

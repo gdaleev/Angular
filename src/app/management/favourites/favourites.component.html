@@ -1,18 +1,17 @@
 <section class="container">
     <h2>FAVORITES</h2>
     <!-- Fetch and display user's favorite cars from the backend -->
-    <div class="car-card">
+    <div *ngFor="let article of articles" class="car-card">
       <img
-        src="https://u4d2z7k9.rocketcdn.me/wp-content/uploads/2022/05/Untitled-1024-%C3%97-768px-6.jpg"
+        src="{{article.imgUrl}}"
         alt="Car 3"
       />
       <div class="car-details">
-        <h3>Exciting Breakthrough in Electric Vehicle Technology</h3>
+        <h3>{{article.title}}</h3>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
-          numquam ...
+          {{article.content.slice(0, 30) + '...'}}
         </p>
-        <a routerLink="/details" class="btn">View Details</a>
+        <a [routerLink]="['/details', article._id]" class="btn">View Details</a>
       </div>
     </div>
     <!-- Add more favorite cars as needed -->

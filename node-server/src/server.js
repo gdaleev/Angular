@@ -341,12 +341,20 @@ app.post("/api/news/favorites/:id", async (req, res) => {
   }
 });
 
-app.get("api/news/favorites", async (req, res) => {
+app.get("/api/news/favorites", async (req, res) => {
   try {
     const tokenCookie = req.cookies.jwt;
-    
+    const decodedToken = jwt.verify(tokenCookie, secret)
+    const user = await User.findById(decodedToken.userId);
+    const favoritesArray = user.favorites;
+    const articles = await NewsArticle.find({
+      _id: { $in: favoritesArray }
+    });
+
+    res.json(articles);
   } catch (error) {
-    
+    console.error(error);
+    res.status(500).json({ error: "Error fetching favorite articles", details: error.message });
   }
 })
 
