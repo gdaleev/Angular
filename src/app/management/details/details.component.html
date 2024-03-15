@@ -11,7 +11,7 @@
     <!-- Edit button linking to the edit page -->
     <div *ngIf="isAuthorized; else notAuthorizedBlock">
       <!-- Content to show when isAuthorized is true -->
-      <a routerLink="/edit">Edit Article</a>
+      <a routerLink="/edit/{{article._id}}">Edit Article</a>
       <a routerLink="/delete">Delete Article</a>
     </div>
     

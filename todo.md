@@ -1,0 +1,5 @@
+- Edit
+- Delete
+- When clicked the "Add to Favorites" buttons should instanly be replaced with "This article is already in your favorites list."
+- Fix the heading for when a user doesn't have favorite articles
+- Error handling

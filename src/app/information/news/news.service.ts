@@ -36,4 +36,8 @@ export class NewsService {
   getFavoriteArticles(): Observable<any> {
     return this.http.get(`${this.apiUrl}/favorites`, {withCredentials: true})
   }
+
+  getArticleDataForEdit(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/edit/${id}`, /*{withCredentials: true}*/)
+  }
 }

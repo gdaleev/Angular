@@ -314,9 +314,16 @@ app.get("/api/news/details/:id", async (req, res) => {
         newsArticle.ownerId.toString() === decodedToken.userId;
 
       const user = await User.findById(decodedToken.userId);
-      const isFavoredByUser = user.favorites.some((favArticleId) => favArticleId.toString() === articleId);  
-      
-      return res.json({ newsArticle, isAuthorized, isAuthenticated, isFavoredByUser });
+      const isFavoredByUser = user.favorites.some(
+        (favArticleId) => favArticleId.toString() === articleId
+      );
+
+      return res.json({
+        newsArticle,
+        isAuthorized,
+        isAuthenticated,
+        isFavoredByUser,
+      });
     }
 
     res.json({ newsArticle });
@@ -335,28 +342,40 @@ app.post("/api/news/favorites/:id", async (req, res) => {
     const favoritesArray = user.favorites;
     favoritesArray.push(articleId);
     await user.save();
-    res.json({articleId})
+    res.json({ articleId });
   } catch (error) {
-    res.status(500).json({ error: "Error adding article to favorites", details: error.message });
+    res.status(500).json({
+      error: "Error adding article to favorites",
+      details: error.message,
+    });
   }
 });
 
 app.get("/api/news/favorites", async (req, res) => {
   try {
     const tokenCookie = req.cookies.jwt;
-    const decodedToken = jwt.verify(tokenCookie, secret)
+    const decodedToken = jwt.verify(tokenCookie, secret);
     const user = await User.findById(decodedToken.userId);
     const favoritesArray = user.favorites;
     const articles = await NewsArticle.find({
-      _id: { $in: favoritesArray }
+      _id: { $in: favoritesArray },
     });
 
     res.json(articles);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error fetching favorite articles", details: error.message });
+    res.status(500).json({
+      error: "Error fetching favorite articles",
+      details: error.message,
+    });
   }
-})
+});
+
+app.get("/api/news/edit/:id", async (req, res) => {
+  const articleId = req.params.id;
+  const newsArticle = await NewsArticle.findById(articleId);
+  res.json({ newsArticle });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

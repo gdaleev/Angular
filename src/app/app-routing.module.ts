@@ -23,7 +23,7 @@ const routes: Routes = [
   {path: 'favourites', component: FavouritesComponent},
   {path: 'create', component: CreateComponent},
   {path: 'details/:id', component: DetailsComponent},
-  {path: 'edit', component: EditComponent}
+  {path: 'edit/:id', component: EditComponent}
 ];
 
 @NgModule({

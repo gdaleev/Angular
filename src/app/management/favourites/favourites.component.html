@@ -1,5 +1,8 @@
 <section class="container">
     <h2>FAVORITES</h2>
+    <div *ngIf="!articles">
+      <h2>You still haven't added articles to Favorites</h2>
+    </div>
     <!-- Fetch and display user's favorite cars from the backend -->
     <div *ngFor="let article of articles" class="car-card">
       <img
