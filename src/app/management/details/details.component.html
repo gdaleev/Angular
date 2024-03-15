@@ -12,7 +12,7 @@
     <div *ngIf="isAuthorized; else notAuthorizedBlock">
       <!-- Content to show when isAuthorized is true -->
       <a routerLink="/edit/{{article._id}}">Edit Article</a>
-      <a routerLink="/delete">Delete Article</a>
+      <button (click)="deleteArticle()">Delete Article</button>
     </div>
     
     <ng-template #notAuthorizedBlock>

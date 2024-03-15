@@ -377,6 +377,24 @@ app.get("/api/news/edit/:id", async (req, res) => {
   res.json({ newsArticle });
 });
 
+app.put("/api/news/edit/:id", async (req, res) => {
+  const articleId = req.params.id;
+
+  const formData = req.body;
+
+  const newsArticle = await NewsArticle.findByIdAndUpdate(articleId, formData, {
+    new: true,
+  });
+
+  res.json({ success: true, newsArticle });
+});
+
+app.delete("/api/news/delete/:id", async (req, res) => {
+  const articleId = req.params.id;
+  const deletedArticle = await NewsArticle.findByIdAndDelete(articleId);
+  res.json({ success: true, deletedArticle });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

@@ -1,13 +1,14 @@
 <section class="container">
     <h2>EDIT</h2>
     <!-- Form for editing an existing article -->
-    <form action="backend-edit-endpoint" method="post">
+    <form (submit)="postNewData($event)">
       <label for="title">Image:</label>
       <input
         type="text"
         id="imgUrl"
         name="imgUrl"
         value={{article.imgUrl}}
+        [(ngModel)]="article.imgUrl"
         required
       />
       <label for="title">Title:</label>
@@ -16,11 +17,12 @@
         id="title"
         name="title"
         value={{article.title}}
+        [(ngModel)]="article.title"
         required
       />
 
       <label for="content">Content:</label>
-      <textarea id="content" name="content" rows="4" required>{{article.content}}</textarea>
+      <textarea id="content" name="content" rows="4" [(ngModel)]="article.content" required>{{article.content}}</textarea>
 
       <button type="submit" class="btn">Save Changes</button>
     </form>

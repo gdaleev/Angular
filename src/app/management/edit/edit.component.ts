@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NewsService } from 'src/app/information/news/news.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Article {
   _id: string;
@@ -15,11 +15,12 @@ interface Article {
   styleUrls: ['./edit.component.css'],
 })
 export class EditComponent implements OnInit {
-  article!: Article;
+  article!: Article; 
 
   constructor(
     private newsService: NewsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -29,6 +30,13 @@ export class EditComponent implements OnInit {
       this.newsService.getArticleDataForEdit(articleId).subscribe((article) => {
         this.article = article.newsArticle;
       });
+    });
+  }
+
+  postNewData(event: Event): void {
+    event.preventDefault();
+    this.newsService.updateArticle(this.article._id, this.article).subscribe(() => {
+      this.router.navigate(['/news']);
     });
   }
 }

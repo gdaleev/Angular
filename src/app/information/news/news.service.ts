@@ -38,6 +38,14 @@ export class NewsService {
   }
 
   getArticleDataForEdit(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/edit/${id}`, /*{withCredentials: true}*/)
+    return this.http.get(`${this.apiUrl}/edit/${id}`)
+  }
+
+  updateArticle(id: string, article: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/edit/${id}`, article)
+  }
+
+  deleteArticle(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete/${id}`)
   }
 }

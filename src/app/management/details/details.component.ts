@@ -59,4 +59,10 @@ export class DetailsComponent implements OnInit{
       }
     );
   }
+
+  deleteArticle(): void {
+    this.newsService.deleteArticle(this.article._id).subscribe(() => {
+      this.router.navigate(["/news"])
+    })
+  }
 }
