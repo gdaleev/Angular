@@ -51,6 +51,7 @@ export class DetailsComponent implements OnInit{
     this.newsService.addArticleToUserFavorites(this.article._id).subscribe(
       () => {
         console.log('Article added to favorites successfully');
+        this.isFavoredByUser = true;
         // Optionally, update the component state or UI to reflect the change
       },
       (error) => {
@@ -58,6 +59,10 @@ export class DetailsComponent implements OnInit{
         // Handle the error (show a message, log, etc.)
       }
     );
+  }
+
+  updateFavoriteStatus() {
+    this.isFavoredByUser = true; // Assuming you have a property to track if the article is favorited by the user
   }
 
   deleteArticle(): void {
