@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NewsService } from '../../information/news/news.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create',
@@ -12,7 +13,7 @@ export class CreateComponent {
   articles: any[] = [];
   newArticle: any = {};
   
-  constructor(private newsService: NewsService) {}
+  constructor(private newsService: NewsService, private router: Router) {}
 
   addNewsArticle() {
     this.newsService.addNewsArticle(this.newArticle).subscribe((article: any) => {
@@ -21,6 +22,7 @@ export class CreateComponent {
       } 
       this.articles.push(article);
       this.newArticle = {};
+      this.router.navigate(['/news'])
     })
   }
 }

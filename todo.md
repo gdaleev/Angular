@@ -1,5 +1,5 @@
-- When clicked the "Add to Favorites" buttons should instantly be replaced with "This article is already in your favorites list."
-- Fix the heading for when a user doesn't have favorite articles
+- Handle expired JWT
 - Error handling
 - Fix inconsistent styling
 - Refactor
+- Write documentation here

@@ -1,5 +1,8 @@
 <section class="container news-container">
   <h2>LATEST NEWS</h2>
+  <div *ngIf="!articles || articles.length == 0">
+    <h2>No articles yet.</h2>
+  </div>
   <div *ngFor="let article of articles" class="news-article">
     <img src="{{ article.imgUrl }}" alt="news-img" />
     <h3>{{ article.title }}</h3>

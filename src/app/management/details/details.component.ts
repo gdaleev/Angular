@@ -48,6 +48,8 @@ export class DetailsComponent implements OnInit{
       return;
     }
 
+    this.isFavoredByUser = true;
+
     this.newsService.addArticleToUserFavorites(this.article._id).subscribe(
       () => {
         console.log('Article added to favorites successfully');
