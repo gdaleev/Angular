@@ -139,28 +139,42 @@ app.post("/api/news", async (req, res) => {
     const tokenCookie = req.cookies.jwt;
 
     if (!tokenCookie) {
-      throw new Error("Cookie is missing");
+      return res.status(401).json({ error: "Token not found" });
+    }
+
+    try {
+      const decodedToken = jwt.verify(tokenCookie, secret);
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      if (decodedToken.exp < currentTimestamp) {
+        return res.status(401).json({ error: "Token expired" });
+      }
+
+      const ownerId = decodedToken.userId;
+
+      // Create a new news article with ownerId
+      const newsArticle = new NewsArticle({
+        ...req.body,
+        ownerId: ownerId,
+      });
+
+      // Save the news article to the database
+      await newsArticle.save();
+
+      res.json(newsArticle);
+    } catch (error) {
+      if (error.name === "TokenExpiredError") {
+        // Token has expired
+        return res.status(401).json({ error: "Token expired" });
+      } else {
+        // Other token verification errors
+        console.error("Error verifying token:", error);
+        return res.status(401).json({ error: "Invalid token" });
+      }
     }
     // Verify the token and extract user information
-    const decodedToken = jwt.verify(tokenCookie, "MySuperPrivateSecret");
-    const ownerId = decodedToken.userId;
-
-    // Create a new news article with ownerId
-    const newsArticle = new NewsArticle({
-      ...req.body,
-      ownerId: ownerId,
-    });
-
-    // Save the news article to the database
-    await newsArticle.save();
-
-    res.json(newsArticle);
   } catch (error) {
-    console.error("Error in creating news article:", error);
-    res.status(500).json({
-      error: "Error in creating news article",
-      details: error.message,
-    });
+    console.error("Error retrieving news article:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -221,8 +235,8 @@ app.post("/api/login", async (req, res) => {
       userId: user._id,
     };
 
-    const options = { expiresIn: "2d" };
-    // const options = { expiresIn: "10s" };
+    // const options = { expiresIn: "2d" };
+    const options = { expiresIn: "10s" };
 
     const token = jwt.sign(payload, secret, options);
     // res.cookie('jwt', token);
