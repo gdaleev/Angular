@@ -7,6 +7,10 @@
       <label for="password">Password:</label>
       <input [(ngModel)]="userData.password" type="password" id="password" name="password" required />
 
+      <div *ngIf="expiredJwtError" class="error-message">
+        {{ expiredJwtError }}
+      </div>
+
       <button type="submit" class="btn">Login</button>
     </form>
   </section>

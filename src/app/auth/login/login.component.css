@@ -56,3 +56,9 @@ button:hover,
 .car-card a:hover {
     background-color: #555;
 } */
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+  }

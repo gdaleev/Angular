@@ -220,7 +220,9 @@ app.post("/api/login", async (req, res) => {
       email: user.email,
       userId: user._id,
     };
+
     const options = { expiresIn: "2d" };
+    // const options = { expiresIn: "10s" };
 
     const token = jwt.sign(payload, secret, options);
     // res.cookie('jwt', token);
@@ -275,21 +277,36 @@ app.get("/api/get-token", async (req, res) => {
 });
 
 app.get("/api/get-user-data", async (req, res) => {
-  const tokenCookie = req.cookies.jwt;
-
-  if (!tokenCookie) {
-    return res.status(401).json({ message: "Token not found" });
-  }
-
   try {
-    // Verify and decode the JWT token
-    const decodedToken = jwt.verify(tokenCookie, secret);
+    const tokenCookie = req.cookies.jwt;
 
-    // You can now use the decoded token data
-    res.json({ username: decodedToken.username, email: decodedToken.email });
+    if (!tokenCookie) {
+      return res.status(401).json({ message: "Token not found" });
+    }
+
+    try {
+      // Verify and decode the JWT token
+      const decodedToken = jwt.verify(tokenCookie, secret);
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      if (decodedToken.exp < currentTimestamp) {
+        return res.status(401).json({ error: "Token expired" });
+      }
+      // You can now use the decoded token data
+      res.json({ username: decodedToken.username, email: decodedToken.email });
+    } catch (error) {
+      // Handle token verification errors
+      if (error.name === "TokenExpiredError") {
+        // Token has expired
+        return res.status(401).json({ error: "Token expired" });
+      } else {
+        // Other token verification errors
+        console.error("Error verifying token:", error);
+        return res.status(401).json({ error: "Invalid token" });
+      }
+    }
   } catch (error) {
-    // Handle token verification errors
-    res.status(401).json({ message: "Invalid token" });
+    console.error("Error retrieving news article:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -328,8 +345,14 @@ app.get("/api/news/details/:id", async (req, res) => {
 
     res.json({ newsArticle });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error fetching article details");
+    if (error.name === "TokenExpiredError") {
+      // Token has expired, send 401 Unauthorized response
+      res.status(401).json({ error: "Token expired" });
+    } else {
+      // Other token verification errors
+      console.error("Error verifying token:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
   }
 });
 
@@ -337,62 +360,198 @@ app.post("/api/news/favorites/:id", async (req, res) => {
   try {
     const articleId = req.params.id;
     const tokenCookie = req.cookies.jwt;
-    const decodedToken = jwt.verify(tokenCookie, secret);
-    const user = await User.findById(decodedToken.userId);
-    const favoritesArray = user.favorites;
-    favoritesArray.push(articleId);
-    await user.save();
-    res.json({ articleId });
+
+    if (!tokenCookie) {
+      return res.status(401).json({ error: "Token not found" });
+    }
+
+    try {
+      const decodedToken = jwt.verify(tokenCookie, secret);
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      if (decodedToken.exp < currentTimestamp) {
+        return res.status(401).json({ error: "Token expired" });
+      }
+      const user = await User.findById(decodedToken.userId);
+      const favoritesArray = user.favorites;
+      favoritesArray.push(articleId);
+      await user.save();
+      res.json({ articleId });
+    } catch (error) {
+      if (error.name === "TokenExpiredError") {
+        // Token has expired
+        return res.status(401).json({ error: "Token expired" });
+      } else {
+        // Other token verification errors
+        console.error("Error verifying token:", error);
+        return res.status(401).json({ error: "Invalid token" });
+      }
+    }
   } catch (error) {
-    res.status(500).json({
-      error: "Error adding article to favorites",
-      details: error.message,
-    });
+    console.error("Error retrieving news article:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
 app.get("/api/news/favorites", async (req, res) => {
   try {
     const tokenCookie = req.cookies.jwt;
-    const decodedToken = jwt.verify(tokenCookie, secret);
-    const user = await User.findById(decodedToken.userId);
-    const favoritesArray = user.favorites;
-    const articles = await NewsArticle.find({
-      _id: { $in: favoritesArray },
-    });
+    if (!tokenCookie) {
+      return res.status(401).json({ error: "Token not found" });
+    }
 
-    res.json(articles);
+    try {
+      const decodedToken = jwt.verify(tokenCookie, secret);
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      if (decodedToken.exp < currentTimestamp) {
+        return res.status(401).json({ error: "Token expired" });
+      }
+      const user = await User.findById(decodedToken.userId);
+      const favoritesArray = user.favorites;
+      const articles = await NewsArticle.find({
+        _id: { $in: favoritesArray },
+      });
+
+      res.json(articles);
+    } catch (error) {
+      if (error.name === "TokenExpiredError") {
+        // Token has expired
+        return res.status(401).json({ error: "Token expired" });
+      } else {
+        // Other token verification errors
+        console.error("Error verifying token:", error);
+        return res.status(401).json({ error: "Invalid token" });
+      }
+    }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Error fetching favorite articles",
-      details: error.message,
-    });
+    console.error("Error retrieving news article:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
 app.get("/api/news/edit/:id", async (req, res) => {
-  const articleId = req.params.id;
-  const newsArticle = await NewsArticle.findById(articleId);
-  res.json({ newsArticle });
+  try {
+    const articleId = req.params.id;
+    const tokenCookie = req.cookies.jwt;
+
+    // Check if token is present
+    if (!tokenCookie) {
+      return res.status(401).json({ error: "Token not found" });
+    }
+
+    try {
+      // Verify the token
+      const decodedToken = jwt.verify(tokenCookie, secret);
+
+      // You might also want to check if the token has expired
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      if (decodedToken.exp < currentTimestamp) {
+        return res.status(401).json({ error: "Token expired" });
+      }
+
+      // Token is valid, continue processing
+      const newsArticle = await NewsArticle.findById(articleId);
+      res.json({ newsArticle });
+    } catch (error) {
+      // Token verification failed
+      if (error.name === "TokenExpiredError") {
+        // Token has expired
+        return res.status(401).json({ error: "Token expired" });
+      } else {
+        // Other token verification errors
+        console.error("Error verifying token:", error);
+        return res.status(401).json({ error: "Invalid token" });
+      }
+    }
+  } catch (error) {
+    // Other server-side errors
+    console.error("Error retrieving news article:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.put("/api/news/edit/:id", async (req, res) => {
-  const articleId = req.params.id;
+  try {
+    const articleId = req.params.id;
 
-  const formData = req.body;
+    const tokenCookie = req.cookies.jwt;
 
-  const newsArticle = await NewsArticle.findByIdAndUpdate(articleId, formData, {
-    new: true,
-  });
+    // Check if token is present
+    if (!tokenCookie) {
+      return res.status(401).json({ error: "Token not found" });
+    }
 
-  res.json({ success: true, newsArticle });
+    try {
+      const decodedToken = jwt.verify(tokenCookie, secret);
+
+      // You might also want to check if the token has expired
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      if (decodedToken.exp < currentTimestamp) {
+        return res.status(401).json({ error: "Token expired" });
+      }
+
+      const formData = req.body;
+
+      const newsArticle = await NewsArticle.findByIdAndUpdate(
+        articleId,
+        formData,
+        {
+          new: true,
+        }
+      );
+
+      res.json({ success: true, newsArticle });
+    } catch (error) {
+      if (error.name === "TokenExpiredError") {
+        // Token has expired
+        return res.status(401).json({ error: "Token expired" });
+      } else {
+        // Other token verification errors
+        console.error("Error verifying token:", error);
+        return res.status(401).json({ error: "Invalid token" });
+      }
+    }
+  } catch (error) {
+    // Other server-side errors
+    console.error("Error retrieving news article:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.delete("/api/news/delete/:id", async (req, res) => {
-  const articleId = req.params.id;
-  const deletedArticle = await NewsArticle.findByIdAndDelete(articleId);
-  res.json({ success: true, deletedArticle });
+  try {
+    const articleId = req.params.id;
+    const tokenCookie = req.cookies.jwt;
+
+    // Check if token is present
+    if (!tokenCookie) {
+      return res.status(401).json({ error: "Token not found" });
+    }
+
+    try {
+      const decodedToken = jwt.verify(tokenCookie, secret);
+
+      // You might also want to check if the token has expired
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      if (decodedToken.exp < currentTimestamp) {
+        return res.status(401).json({ error: "Token expired" });
+      }
+
+      const deletedArticle = await NewsArticle.findByIdAndDelete(articleId);
+      res.json({ success: true, deletedArticle });
+    } catch (error) {
+      if (error.name === "TokenExpiredError") {
+        // Token has expired, send 401 Unauthorized response
+        res.status(401).json({ error: "Token expired" });
+      } else {
+        // Other token verification errors
+        console.error("Error verifying token:", error);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    }
+  } catch (error) {
+    console.error("Error retrieving news article:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.listen(port, () => {

@@ -1,5 +1,7 @@
-- Handle expired JWT
+- Fix redirect to login with expired jwt message on initial load
+- On delete the record in the favorites array in the database should also be removed
 - Error handling
+- 404 page
 - Fix inconsistent styling
 - Refactor
 - Write documentation here

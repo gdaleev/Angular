@@ -4,10 +4,11 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth/auth.service';  // Replace 'AuthService' with your authentication service
 import { Router } from '@angular/router';
+import { ErrorMessageService } from './error-message.service';
 
 @Injectable()
 export class HttpInterceptorService implements HttpInterceptor {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService, private errorMessageService: ErrorMessageService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
@@ -16,7 +17,9 @@ export class HttpInterceptorService implements HttpInterceptor {
           // Handle expired token here
           // For example, redirect to login page or refresh token
            // Example logout function, replace with your logic
+           this.authService.logoutUser()
            this.router.navigate(['/login'])
+           this.errorMessageService.setErrorMessage('Your session has expired. Please log in again.');
         }
         return throwError(error);
       })

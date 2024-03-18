@@ -4,6 +4,7 @@ import { TokenService } from 'src/app/auth/token.service';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 
+
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
@@ -49,6 +50,10 @@ export class NavigationComponent implements OnInit {
           // console.log('Decoded Token:', response.decodedToken);
           this.isAuthenticated =
             response.decodedToken.exp > Math.floor(Date.now() / 1000);
+            if (!this.isAuthenticated) {
+              this.logout()
+              this.router.navigate(['/login']);
+            }
         } else {
           console.error('Token response is null or undefined');
           this.isAuthenticated = false;

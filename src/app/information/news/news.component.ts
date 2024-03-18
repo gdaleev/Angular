@@ -32,11 +32,4 @@ export class NewsComponent implements OnInit {
       this.article = article.newsArticle;
     })
   }
-
-  // addNewsArticle() {
-  //   this.newsService.addNewsArticle(this.newArticle).subscribe((article) => {
-  //     this.articles.push(article);
-  //     this.newArticle = {};
-  //   })
-  // }
 }
