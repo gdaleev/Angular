@@ -19,7 +19,7 @@
       <div *ngIf="isAuthenticated; else noLinksBlock">
         <!-- Content to show when isAuthenticated is true -->
         <ng-container *ngIf="!isFavoredByUser; else alreadyFavoredBlock">
-          <a (click)="addArticleToFavorites()">Add To Favorites</a>
+          <a (click)="addArticleToFavorites(); updateFavoriteStatus()">Add To Favorites</a>
         </ng-container>
         <ng-template #alreadyFavoredBlock>
           <p>This article is already in your favorites list.</p>
