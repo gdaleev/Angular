@@ -2,8 +2,9 @@
 - Error handling
 - On delete the record in the favorites array in the database should also be removed
 - 404 page
+- Add cookie service
 - Sort articles from newest to oldest (timestamps)
-- Fix inconsistent styling
 - Refactor
+- Fix inconsistent styling
 - Brief documentation on the project and project architecture (here)
 - ON LAST COMMIT DELETE NODE MODULES FOLDER

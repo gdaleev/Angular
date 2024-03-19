@@ -235,8 +235,8 @@ app.post("/api/login", async (req, res) => {
       userId: user._id,
     };
 
-    // const options = { expiresIn: "2d" };
-    const options = { expiresIn: "10s" };
+    const options = { expiresIn: "2d" };
+    // const options = { expiresIn: "10s" };
 
     const token = jwt.sign(payload, secret, options);
     // res.cookie('jwt', token);

@@ -12,19 +12,21 @@ import { DetailsComponent } from './management/details/details.component';
 import { EditComponent } from './management/edit/edit.component';
 import { HomeComponent } from './home/home-comp/home.component';
 import { AuthGuard } from './auth.guard';
+import { RouteGuard } from './route.guard';
+import { GuestGuard } from './guest.guard';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'news', component: NewsComponent},
   {path: 'about', component: AboutComponent},
   {path: 'contact', component: ContactComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
-  {path: 'profile', component: ProfileComponent},
-  {path: 'favourites', component: FavouritesComponent},
-  {path: 'create', component: CreateComponent, canActivate: [AuthGuard]},
-  {path: 'details/:id', component: DetailsComponent},
-  {path: 'edit/:id', component: EditComponent}
+  {path: 'login', component: LoginComponent, canActivate: [GuestGuard]},
+  {path: 'register', component: RegisterComponent, canActivate: [GuestGuard]},
+  {path: 'profile', component: ProfileComponent, canActivate: [RouteGuard]},
+  {path: 'favourites', component: FavouritesComponent, canActivate: [RouteGuard]},
+  {path: 'create', component: CreateComponent, canActivate: [AuthGuard, RouteGuard]},
+  {path: 'details/:id', component: DetailsComponent, canActivate: [RouteGuard]},
+  {path: 'edit/:id', component: EditComponent, canActivate: [RouteGuard]}
 ];
 
 @NgModule({
