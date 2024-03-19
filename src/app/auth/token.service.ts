@@ -26,11 +26,22 @@ export class TokenService {
     return this.http.post<any>(clearTokenUrl, {}, options);
   }
 
-  getToken(): Observable<any> {
-    const options = { withCredentials: true }; // Include withCredentials option
-
+  getToken(isInitialLoad: boolean = false): Observable<any> {
+    const options = {
+      withCredentials: true,
+      headers: {
+        'Initial-Load': isInitialLoad ? 'true' : 'false' // Indicate whether it's the initial load
+      }
+    };
+  
     return this.http.get(`${this.apiUrl}/get-token`, options);
   }
+
+  // getToken(): Observable<any> {
+  //   const options = { withCredentials: true }; // Include withCredentials option
+
+  //   return this.http.get(`${this.apiUrl}/get-token`, options);
+  // }
 
   setTokenExpiration(decodedTokenExp: any): void {
     const currentTimestamp = Math.floor(Date.now() / 1000);

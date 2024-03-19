@@ -43,7 +43,7 @@ export class NavigationComponent implements OnInit {
   }
   
   private updateAuthenticationStatus(): void {
-    this.tokenService.getToken().subscribe(
+    this.tokenService.getToken(true).subscribe(
       (response) => {
         if (response) {
           // Check if the token is present and not expired

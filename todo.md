@@ -1,7 +1,10 @@
-- Fix redirect to login with expired jwt message on initial load
-- On delete the record in the favorites array in the database should also be removed
+- 'Add Article' makes sense to be in the private part of the app
+- Implement route guards for the private AND the public part: guest users shouldn‘t be able to access private pages,        logged-in users shouldn‘t be able to see the login/register pages
 - Error handling
+- On delete the record in the favorites array in the database should also be removed
 - 404 page
+- Sort articles from newest to oldest (timestamps)
 - Fix inconsistent styling
 - Refactor
-- Write documentation here
+- Brief documentation on the project and project architecture (here)
+- ON LAST COMMIT DELETE NODE MODULES FOLDER

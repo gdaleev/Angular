@@ -12,9 +12,18 @@ export class AuthService {
   token: string | null = null;
   private authenticationStatusSubject = new Subject<boolean>();
   authenticationStatus$ = this.authenticationStatusSubject.asObservable();
+  private initialLoad = true;
 
   constructor(private http: HttpClient, private tokenService: TokenService) {
     // this.token = this.tokenService.getToken();
+  }
+
+  isInitialLoad(): boolean {
+    return this.initialLoad;
+  }
+
+  setInitialLoadFalse(): void {
+    this.initialLoad = false;
   }
 
   registerUser(userData: any): Observable<any> {

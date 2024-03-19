@@ -265,21 +265,21 @@ app.post("/api/logout", async (req, res) => {
 
 app.get("/api/get-token", async (req, res) => {
   const tokenCookie = req.cookies.jwt;
-
-  // console.log('Received request to /api/get-token. Token Cookie:', tokenCookie);
+  const isInitialLoad = req.headers["initial-load"] === "true";
 
   if (!tokenCookie) {
-    console.log("Token not found. Sending 401 Unauthorized response.");
-    return res.status(401).json({ message: "Token not found" });
+    console.log("Token not found.");
+    if (isInitialLoad) {
+      console.log("Initial load: Token not found.");
+      return res.json({ message: "Token not found during initial load" });
+    } else {
+      console.log("Sending 401 Unauthorized response.");
+      return res.status(401).json({ message: "Token not found" });
+    }
   }
 
   try {
-    // console.log('Attempting to verify and decode the token...');
     const decodedToken = jwt.verify(tokenCookie, secret);
-
-    // Extract relevant information if needed
-    // console.log('Token verification successful. Decoded Token:', decodedToken);
-
     res.json({ decodedToken });
   } catch (error) {
     console.error("Token Verification Error:", error);
@@ -289,6 +289,33 @@ app.get("/api/get-token", async (req, res) => {
     res.status(401).json({ message: "Invalid token" });
   }
 });
+
+// app.get("/api/get-token", async (req, res) => {
+//   const tokenCookie = req.cookies.jwt;
+
+//   // console.log('Received request to /api/get-token. Token Cookie:', tokenCookie);
+
+//   if (!tokenCookie) {
+//     console.log("Token not found. Sending 401 Unauthorized response.");
+//     return res.status(401).json({ message: "Token not found" });
+//   }
+
+//   try {
+//     // console.log('Attempting to verify and decode the token...');
+//     const decodedToken = jwt.verify(tokenCookie, secret);
+
+//     // Extract relevant information if needed
+//     // console.log('Token verification successful. Decoded Token:', decodedToken);
+
+//     res.json({ decodedToken });
+//   } catch (error) {
+//     console.error("Token Verification Error:", error);
+//     console.log(
+//       "Sending 401 Unauthorized response due to token verification error."
+//     );
+//     res.status(401).json({ message: "Invalid token" });
+//   }
+// });
 
 app.get("/api/get-user-data", async (req, res) => {
   try {
