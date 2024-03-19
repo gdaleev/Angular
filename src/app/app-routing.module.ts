@@ -11,6 +11,7 @@ import { CreateComponent } from './management/create/create.component';
 import { DetailsComponent } from './management/details/details.component';
 import { EditComponent } from './management/edit/edit.component';
 import { HomeComponent } from './home/home-comp/home.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -21,7 +22,7 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'profile', component: ProfileComponent},
   {path: 'favourites', component: FavouritesComponent},
-  {path: 'create', component: CreateComponent},
+  {path: 'create', component: CreateComponent, canActivate: [AuthGuard]},
   {path: 'details/:id', component: DetailsComponent},
   {path: 'edit/:id', component: EditComponent}
 ];

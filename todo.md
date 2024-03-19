@@ -1,4 +1,3 @@
-- 'Add Article' makes sense to be in the private part of the app
 - Implement route guards for the private AND the public part: guest users shouldn‘t be able to access private pages,        logged-in users shouldn‘t be able to see the login/register pages
 - Error handling
 - On delete the record in the favorites array in the database should also be removed

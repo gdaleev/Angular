@@ -102,7 +102,7 @@ export class AuthService {
     const userDataUrl = `${this.apiUrl}/get-user-data`;
     return this.http.get<any>(userDataUrl, { withCredentials: true });
   }
-
+  
   // clearUserData(): void {
   //   const userDataString = localStorage.getItem('userData');
   //   localStorage.removeItem('userData');
