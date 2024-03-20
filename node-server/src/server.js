@@ -33,12 +33,28 @@ mongoose.connect("mongodb://127.0.0.1:27017/auto-insight");
 app.use(bodyParser.json());
 
 const newsArticleSchema = new mongoose.Schema({
-  imgUrl: String,
-  title: String,
-  content: String,
+  imgUrl: {
+    type: String,
+    required: [true, "Image URL is required"],
+    match: [
+      /^https?:\/\/.*\.(?:png|jpg|gif|jpeg)$/,
+      "Please provide a valid image URL",
+    ],
+  },
+  title: {
+    type: String,
+    required: [true, "Title is required"],
+    minlength: [5, "Title must be at least 5 characters long"],
+  },
+  content: {
+    type: String,
+    required: [true, "Content is required"],
+    minlength: [20, "Content must be at least 20 characters long"],
+  },
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: [true, "Owner ID is required"],
   },
 });
 
@@ -165,15 +181,20 @@ app.post("/api/news", async (req, res) => {
       if (error.name === "TokenExpiredError") {
         // Token has expired
         return res.status(401).json({ error: "Token expired" });
+      } else if (error.name === "ValidationError") {
+        // Mongoose validation error
+        const validationErrors = Object.values(error.errors).map(
+          (err) => err.message
+        );
+        return res.status(400).json({ error: validationErrors });
       } else {
-        // Other token verification errors
-        console.error("Error verifying token:", error);
-        return res.status(401).json({ error: "Invalid token" });
+        // Other token verification or database errors
+        console.error("Error creating news article:", error);
+        return res.status(500).json({ error: "Internal server error" });
       }
     }
-    // Verify the token and extract user information
   } catch (error) {
-    console.error("Error retrieving news article:", error);
+    console.error("Error creating news article:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

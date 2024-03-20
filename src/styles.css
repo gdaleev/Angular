@@ -173,6 +173,12 @@ form button {
     margin-top: 20px;
 }
 
+.error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+
 /* Car Card Styles */
 /* .car-card {
     display: flex;

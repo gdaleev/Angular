@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { catchError, throwError, tap } from 'rxjs';
@@ -17,11 +17,26 @@ export class NewsService {
   }
 
   addNewsArticle(news: any): Observable<any> {
-    // const headers = this.authService.getAuthorizationHeader();
-    return this.http
-      .post<any>(`${this.apiUrl}`, news, { withCredentials: true })
-      .pipe(catchError((error) => throwError(error)));
+    return this.http.post<any>(this.apiUrl, news, { withCredentials: true })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 400 && error.error && Array.isArray(error.error.error)) {
+            // If the status code is 400 and the error contains validation errors
+            return throwError(error.error.error); // Return validation errors to the component
+          } else {
+            // For other errors, simply re-throw the error
+            return throwError('Failed to add news article. Please try again.');
+          }
+        })
+      );
   }
+
+  // addNewsArticle(news: any): Observable<any> {
+  //   // const headers = this.authService.getAuthorizationHeader();
+  //   return this.http
+  //     .post<any>(`${this.apiUrl}`, news, { withCredentials: true })
+  //     .pipe(catchError((error) => throwError(error)));
+  // }
 
   getNewsArticleDetails(id: string): Observable<any> {
     return this.http

@@ -12,17 +12,29 @@ import { Router } from '@angular/router';
 export class CreateComponent {
   articles: any[] = [];
   newArticle: any = {};
+  errorMessage: string | null = null; // Error message to display to the user
   
   constructor(private newsService: NewsService, private router: Router) {}
 
   addNewsArticle() {
-    this.newsService.addNewsArticle(this.newArticle).subscribe((article: any) => {
-      if (this.articles === undefined) {
-        this.articles = []
-      } 
-      this.articles.push(article);
-      this.newArticle = {};
-      this.router.navigate(['/news'])
-    })
+    this.newsService.addNewsArticle(this.newArticle).subscribe(
+      (article: any) => {
+        if (this.articles === undefined) {
+          this.articles = []
+        } 
+        this.articles.push(article);
+        this.newArticle = {};
+        this.router.navigate(['/news']);
+      },
+      (error: any) => {
+        if (Array.isArray(error)) {
+          // If the error is an array of validation errors, join them into a single string
+          this.errorMessage = error.join(', ');
+        } else {
+          // For other errors, display the generic error message
+          this.errorMessage = 'Failed to add news article. Please try again.';
+        }
+      }
+    );
   }
 }

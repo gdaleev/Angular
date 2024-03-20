@@ -1,6 +1,7 @@
 <section class="container">
     <h2>ADD NEW ARTICLE</h2>
     <!-- Form for creating a new article -->
+    
     <form (submit)="addNewsArticle()" method="post">
       <label for="image">Image:</label>
       <input [(ngModel)]="newArticle.imgUrl" name="image" required />
@@ -13,4 +14,8 @@
 
       <button type="submit" class="btn">Create Article</button>
     </form>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
   </section>
