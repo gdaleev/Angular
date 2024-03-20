@@ -16,6 +16,7 @@ interface Article {
 })
 export class EditComponent implements OnInit {
   article!: Article; 
+  errorMessage: string | null = null;
 
   constructor(
     private newsService: NewsService,
@@ -35,8 +36,19 @@ export class EditComponent implements OnInit {
 
   postNewData(event: Event): void {
     event.preventDefault();
-    this.newsService.updateArticle(this.article._id, this.article).subscribe(() => {
-      this.router.navigate(['/news']);
-    });
+    this.newsService.updateArticle(this.article._id, this.article).subscribe(
+      () => {
+        this.router.navigate(['/news']);
+      },
+      (error: any) => {
+        if (Array.isArray(error)) {
+          // If the error is an array of validation errors, join them into a single string
+          this.errorMessage = error.join(', ');
+        } else {
+          // For other errors, display the generic error message
+          this.errorMessage = 'Failed to add news article. Please try again.';
+        }
+      }
+    );
   }
 }

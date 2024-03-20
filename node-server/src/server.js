@@ -534,48 +534,39 @@ app.get("/api/news/edit/:id", async (req, res) => {
 app.put("/api/news/edit/:id", async (req, res) => {
   try {
     const articleId = req.params.id;
-
     const tokenCookie = req.cookies.jwt;
 
-    // Check if token is present
     if (!tokenCookie) {
       return res.status(401).json({ error: "Token not found" });
     }
 
-    try {
-      const decodedToken = jwt.verify(tokenCookie, secret);
+    const decodedToken = jwt.verify(tokenCookie, secret);
+    const currentTimestamp = Math.floor(Date.now() / 1000);
 
-      // You might also want to check if the token has expired
-      const currentTimestamp = Math.floor(Date.now() / 1000);
-      if (decodedToken.exp < currentTimestamp) {
-        return res.status(401).json({ error: "Token expired" });
-      }
-
-      const formData = req.body;
-
-      const newsArticle = await NewsArticle.findByIdAndUpdate(
-        articleId,
-        formData,
-        {
-          new: true,
-        }
-      );
-
-      res.json({ success: true, newsArticle });
-    } catch (error) {
-      if (error.name === "TokenExpiredError") {
-        // Token has expired
-        return res.status(401).json({ error: "Token expired" });
-      } else {
-        // Other token verification errors
-        console.error("Error verifying token:", error);
-        return res.status(401).json({ error: "Invalid token" });
-      }
+    if (decodedToken.exp < currentTimestamp) {
+      return res.status(401).json({ error: "Token expired" });
     }
+
+    const formData = req.body;
+
+    const newsArticle = await NewsArticle.findByIdAndUpdate(
+      articleId,
+      formData,
+      { new: true, runValidators: true } // To ensure Mongoose validators are run
+    );
+
+    res.json({ success: true, newsArticle });
   } catch (error) {
-    // Other server-side errors
-    console.error("Error retrieving news article:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error updating news article:", error);
+    if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      return res.status(400).json({ error: validationErrors });
+    }
+    res
+      .status(500)
+      .json({ error: "Failed to update news article. Please try again." });
   }
 });
 

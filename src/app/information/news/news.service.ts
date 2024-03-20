@@ -57,7 +57,17 @@ export class NewsService {
   }
 
   updateArticle(id: string, article: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/edit/${id}`, article, {withCredentials: true})
+    return this.http.put(`${this.apiUrl}/edit/${id}`, article, {withCredentials: true}).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 400 && error.error && Array.isArray(error.error.error)) {
+          // If the status code is 400 and the error contains validation errors
+          return throwError(error.error.error); // Return validation errors to the component
+        } else {
+          // For other errors, simply re-throw the error
+          return throwError('Failed to update news article. Please try again.');
+        }
+      })
+    );
   }
 
   deleteArticle(id: string): Observable<any> {

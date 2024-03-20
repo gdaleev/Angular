@@ -26,4 +26,7 @@
 
       <button type="submit" class="btn">Save Changes</button>
     </form>
+    <div class="error-container" *ngIf="errorMessage">
+      <p class="error-message">{{ errorMessage }}</p>
+    </div>
   </section>
