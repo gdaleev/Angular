@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit{
   userData: any = {};
   private subscription: Subscription = new Subscription();
   expiredJwtError: string = '';
+  errorMessage: string | null = null;
 
   constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private errorMessageService: ErrorMessageService) {}
 
@@ -27,21 +28,12 @@ export class LoginComponent implements OnInit{
   onSubmit(): void {
     this.subscription.add(
       this.authService.loginUser(this.userData).subscribe(
-        (response) => {
-          // console.log('Login successful:', response);
-          if (response.token) {
-            // Decode and set token expiration if needed
-            // this.tokenService.setTokenExpiration(jwtDecode(response.token).exp);
-          }
-          // this.tokenService.saveCookie(response.token);
-          // this.decodedToken = jwtDecode(response.token);
-          // this.tokenService.setTokenExpiration(this.decodedToken.exp)
-          // console.log(this.decodedToken);
-          // console.log(this.decodedToken.exp);
+        () => {
           this.router.navigate(["/"])
         },
         (error) => {
           console.error('Login failed:', error);
+          this.errorMessage = error;
         }
       )
     );

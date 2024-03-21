@@ -35,21 +35,21 @@ app.use(bodyParser.json());
 const newsArticleSchema = new mongoose.Schema({
   imgUrl: {
     type: String,
-    required: [true, "Image URL is required"],
+    required: [true, "Image URL is required!"],
     match: [
       /^https?:\/\/.*\.(?:png|jpg|gif|jpeg)$/,
-      "Please provide a valid image URL",
+      "Please provide a valid image URL!",
     ],
   },
   title: {
     type: String,
-    required: [true, "Title is required"],
-    minlength: [5, "Title must be at least 5 characters long"],
+    required: [true, "Title is required!"],
+    minlength: [5, "Title must be at least 5 characters long!"],
   },
   content: {
     type: String,
-    required: [true, "Content is required"],
-    minlength: [20, "Content must be at least 20 characters long"],
+    required: [true, "Content is required!"],
+    minlength: [20, "Content must be at least 20 characters long!"],
   },
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -61,29 +61,29 @@ const newsArticleSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: [true, "Username is required"],
-    minlength: [4, "Username should be at least 4 characters long"],
+    required: [true, "Username is required!"],
+    minlength: [4, "Username should be at least 4 characters long!"],
     unique: true,
   },
   email: {
     type: String,
     required: [true, "Email is required"],
-    minlength: [10, "Email should be at least 10 characters long"],
+    minlength: [10, "Email should be at least 10 characters long!"],
     unique: true,
   },
   password: {
     type: String,
-    required: [true, "Password is required"],
-    minlength: [4, "Password should be at least 4 characters long"],
+    required: [true, "Password is required!"],
+    minlength: [4, "Password should be at least 4 characters long!"],
   },
   confirmPassword: {
     type: String,
-    required: [true, "Repeat password is required"],
+    required: [true, "Repeat password is required!"],
     validate: {
       validator: function (value) {
         return value === this.password;
       },
-      message: "Passwords do not match",
+      message: "Passwords do not match!",
     },
     select: false,
   },
@@ -262,20 +262,24 @@ app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    if (!username || !password) {
-      throw new Error("Username and password are required!");
+    if (!username) {
+      return res.status(400).json({ error: "Username is required!" });
+    }
+
+    if (!password) {
+      return res.status(400).json({ error: "Password is required!" });
     }
 
     const user = await User.findOne({ username });
 
     if (!user) {
-      throw new Error("Invalid username!");
+      return res.status(400).json({ error: "Invalid username!" });
     }
 
     const isPasswordValid = await user.comparePassword(password);
 
     if (!isPasswordValid) {
-      throw new Error("Invalid password!");
+      return res.status(400).json({ error: "Invalid password!" });
     }
 
     const payload = {
@@ -288,14 +292,11 @@ app.post("/api/login", async (req, res) => {
     // const options = { expiresIn: "10s" };
 
     const token = jwt.sign(payload, secret, options);
-    // res.cookie('jwt', token);
 
     res.status(200).json({ token });
   } catch (error) {
     console.error("Error in login:", error);
-    res
-      .status(401)
-      .json({ error: "Authentication failed", details: error.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

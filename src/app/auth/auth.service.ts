@@ -67,10 +67,25 @@ export class AuthService {
     return this.http
       .post<any>(loginUrl, userData, { withCredentials: true })
       .pipe(
-        catchError((error) => throwError(error)),
         tap((response) => {
           this.tokenService.saveCookie(response.token);
           this.notifyAuthenticationStatus(true);
+        }),
+        catchError((error: HttpErrorResponse) => {
+
+          if (error.status === 400) {
+            if (error.error && error.error.error === "Username is required!") {
+              return throwError("Please enter your username!");
+            } else if (error.error && error.error.error === "Password is required!") {
+              return throwError("Please enter your password!");
+            } else if (error.error && error.error.error === "Invalid username!") {
+              return throwError("Invalid username!");
+            } else if (error.error && error.error.error === "Invalid password!") {
+              return throwError("Invalid password!");
+            }
+          }
+
+          return throwError('An error occurred during login. Please try again.');
         })
       );
   }
