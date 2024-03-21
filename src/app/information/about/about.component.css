@@ -16,3 +16,8 @@
 img {
     width: 10%;
 }
+
+p {
+    text-align: center;
+    margin: 50px;
+}

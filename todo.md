@@ -1,6 +1,4 @@
-- Error handling for login and register forms
 - On delete the record in the favorites array in the database should also be removed
-- 404 page
 - Add cookie service
 - Sort articles from newest to oldest (timestamps)
 - Refactor

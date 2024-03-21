@@ -11,10 +11,12 @@ import { InformationModule } from './information/information.module';
 import { AuthModule } from './auth/auth.module';
 import { ManagementModule } from './management/management.module';
 import { HttpInterceptorService } from './http-interceptor.service';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NotFoundComponent
   ],
   imports: [
     HttpClientModule,
