@@ -11,14 +11,15 @@ import { Router } from '@angular/router';
 export class RegisterComponent {
   userData: any = {};
   private subscription: Subscription = new Subscription();
+  errorMessage: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
   
   onSubmit(): void {
-    if (this.userData.password !== this.userData.rePassword) {
-      console.error('Password and Confirm Password do not match');
-      return;
-    }
+    // if (this.userData.password !== this.userData.rePassword) {
+    //   console.error('Password and Confirm Password do not match');
+    //   return;
+    // }
   
     this.subscription.add(
       this.authService.registerUser(this.userData).subscribe(
@@ -26,8 +27,15 @@ export class RegisterComponent {
           console.log('Registration successful:', response);
           this.router.navigate(['/login'])
         },
-        (error) => {
-          console.error('Registration failed:', error);
+        (error: any) => {
+          if (Array.isArray(error)) {
+            // If the error is an array of validation errors, join them into a single string
+            // this.errorMessage = error.join(', ');
+            this.errorMessage = error[0];
+          } else {
+            // For other errors, display the generic error message
+            this.errorMessage = 'Failed to register user. Please try again.';
+          }
         }
       )
     );

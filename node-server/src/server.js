@@ -61,13 +61,32 @@ const newsArticleSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
+    required: [true, "Username is required"],
+    minlength: [4, "Username should be at least 4 characters long"],
     unique: true,
   },
   email: {
     type: String,
+    required: [true, "Email is required"],
+    minlength: [10, "Email should be at least 10 characters long"],
     unique: true,
   },
-  password: String,
+  password: {
+    type: String,
+    required: [true, "Password is required"],
+    minlength: [4, "Password should be at least 4 characters long"],
+  },
+  confirmPassword: {
+    type: String,
+    required: [true, "Repeat password is required"],
+    validate: {
+      validator: function (value) {
+        return value === this.password;
+      },
+      message: "Passwords do not match",
+    },
+    select: false,
+  },
   favorites: {
     type: [
       {
@@ -77,6 +96,11 @@ const userSchema = new mongoose.Schema({
     ],
     default: [],
   },
+});
+
+userSchema.pre("save", function (next) {
+  this.confirmPassword = undefined;
+  next();
 });
 
 userSchema.pre("save", async function (next) {
@@ -205,28 +229,32 @@ app.post("/api/register", async (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
+      confirmPassword: req.body.rePassword,
     });
 
     await newUser.save();
 
     res.json(newUser);
   } catch (error) {
+    if (error.code === 11000) {
+      if (error.keyPattern.username) {
+        return res.status(400).json({ error: "Username already taken" });
+      } else if (error.keyPattern.email) {
+        return res.status(400).json({ error: "Email already registered" });
+      } else {
+        return res.status(400).json({ error: "Duplicate key error" });
+      }
+    } else if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      return res.status(400).json({ error: validationErrors });
+    } else {
+    }
     console.error("Error in registration:", error);
     res
       .status(500)
       .json({ error: "Error in registration", details: error.message });
-    // let errors = [];
-
-    // if (error.code === 11000) {
-    //   errors.push("username already in use!");
-    //   return res.render("register", { errors, layout: "main" });
-    // }
-
-    // if (error.name === "ValidationError") {
-    //   errors = Object.values(error.errors).map((err) => err.message);
-
-    //   return res.render("register", { errors, userData, layout: "main" });
-    // }
   }
 });
 

@@ -21,4 +21,7 @@
 
       <button type="submit" class="btn">Register</button>
     </form>
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
   </section>

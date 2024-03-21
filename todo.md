@@ -1,5 +1,4 @@
-- Implement route guards for the private AND the public part: guest users shouldn‘t be able to access private pages,        logged-in users shouldn‘t be able to see the login/register pages
-- Error handling
+- Error handling for login and register forms
 - On delete the record in the favorites array in the database should also be removed
 - 404 page
 - Add cookie service

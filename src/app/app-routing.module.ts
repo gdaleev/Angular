@@ -25,7 +25,7 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent, canActivate: [RouteGuard]},
   {path: 'favourites', component: FavouritesComponent, canActivate: [RouteGuard]},
   {path: 'create', component: CreateComponent, canActivate: [AuthGuard, RouteGuard]},
-  {path: 'details/:id', component: DetailsComponent, canActivate: [RouteGuard]},
+  {path: 'details/:id', component: DetailsComponent/*, canActivate: [RouteGuard]*/},
   {path: 'edit/:id', component: EditComponent, canActivate: [RouteGuard]}
 ];
 

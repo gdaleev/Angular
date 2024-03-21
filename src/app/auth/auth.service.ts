@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { TokenService } from './token.service';
@@ -28,9 +32,21 @@ export class AuthService {
 
   registerUser(userData: any): Observable<any> {
     const registerUrl = `${this.apiUrl}/register`;
-    return this.http
-      .post<any>(registerUrl, userData)
-      .pipe(catchError((error) => throwError(error)));
+    return this.http.post<any>(registerUrl, userData).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (
+          error.status === 400 &&
+          error.error &&
+          Array.isArray(error.error.error)
+        ) {
+          // If the status code is 400 and the error contains validation errors
+          return throwError(error.error.error); // Return validation errors to the component
+        } else {
+          // For other errors, simply re-throw the error
+          return throwError('Failed to register user. Please try again.');
+        }
+      })
+    );
   }
 
   // loginUser(userData: any): Observable<any> {
@@ -54,7 +70,7 @@ export class AuthService {
         catchError((error) => throwError(error)),
         tap((response) => {
           this.tokenService.saveCookie(response.token);
-          this.notifyAuthenticationStatus(true)
+          this.notifyAuthenticationStatus(true);
         })
       );
   }
@@ -63,16 +79,15 @@ export class AuthService {
     // Additional logic for clearing tokens on the server if needed
     this.tokenService.clearToken().subscribe(
       () => {
-        this.notifyAuthenticationStatus(false)
+        this.notifyAuthenticationStatus(false);
       },
       (error) => {
         console.error('Error clearing token: ', error);
-        this.notifyAuthenticationStatus(false)
-        
+        this.notifyAuthenticationStatus(false);
       }
-    )
+    );
 
-    return throwError('Logout failed')
+    return throwError('Logout failed');
   }
 
   // Other methods...
@@ -84,7 +99,7 @@ export class AuthService {
   private clearCookie(): void {
     document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   }
-  
+
   private notifyAuthenticationStatus(status: boolean): void {
     this.authenticationStatusSubject.next(status);
   }
