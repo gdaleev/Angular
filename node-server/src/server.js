@@ -23,8 +23,8 @@ app.use(
 
 app.use(
   cors({
-    origin: "http://localhost:4200", // Adjust this to your Angular app's origin
-    credentials: true, // Allow credentials (cookies)
+    origin: "http://localhost:4200",
+    credentials: true,
   })
 );
 
@@ -135,45 +135,6 @@ app.get("/api/news", async (req, res) => {
   res.json(newsArticles);
 });
 
-// app.post("/api/news", async (req, res) => {
-//   const newsArticle = new NewsArticle(req.body);
-//   await newsArticle.save();
-//   res.json(newsArticle);
-// });
-
-// app.post("/api/news", async (req, res) => {
-//   try {
-//     const authorizationHeader = req.headers.authorization;
-//     if (!authorizationHeader) {
-//       throw new Error("Authorization header is missing");
-//     }
-
-//     const token = authorizationHeader.split(" ")[1];
-//     console.log(token);
-//     if (!token) {
-//       throw new Error("Invalid Authorization header format");
-//     }
-
-//     // Verify the token and extract user information
-//     const decodedToken = jwt.verify(token, "MySuperPrivateSecret");
-//     const ownerId = decodedToken.userId;
-
-//     // Create a new news article with ownerId
-//     const newsArticle = new NewsArticle({
-//       ...req.body,
-//       ownerId: ownerId,
-//     });
-
-//     // Save the news article to the database
-//     await newsArticle.save();
-
-//     res.json(newsArticle);
-//   } catch (error) {
-//     console.error("Error in creating news article:", error);
-//     res.status(500).json({ error: "Error in creating news article", details: error.message });
-//   }
-// });
-
 app.post("/api/news", async (req, res) => {
   try {
     const tokenCookie = req.cookies.jwt;
@@ -191,28 +152,23 @@ app.post("/api/news", async (req, res) => {
 
       const ownerId = decodedToken.userId;
 
-      // Create a new news article with ownerId
       const newsArticle = new NewsArticle({
         ...req.body,
         ownerId: ownerId,
       });
 
-      // Save the news article to the database
       await newsArticle.save();
 
       res.json(newsArticle);
     } catch (error) {
       if (error.name === "TokenExpiredError") {
-        // Token has expired
         return res.status(401).json({ error: "Token expired" });
       } else if (error.name === "ValidationError") {
-        // Mongoose validation error
         const validationErrors = Object.values(error.errors).map(
           (err) => err.message
         );
         return res.status(400).json({ error: validationErrors });
       } else {
-        // Other token verification or database errors
         console.error("Error creating news article:", error);
         return res.status(500).json({ error: "Internal server error" });
       }
@@ -302,7 +258,6 @@ app.post("/api/login", async (req, res) => {
 
 app.post("/api/logout", async (req, res) => {
   try {
-    // Clear user session data
     req.session.destroy(() => {
       res.clearCookie("jwt");
       res.status(200).json({ message: "Logout successful" });
@@ -340,33 +295,6 @@ app.get("/api/get-token", async (req, res) => {
   }
 });
 
-// app.get("/api/get-token", async (req, res) => {
-//   const tokenCookie = req.cookies.jwt;
-
-//   // console.log('Received request to /api/get-token. Token Cookie:', tokenCookie);
-
-//   if (!tokenCookie) {
-//     console.log("Token not found. Sending 401 Unauthorized response.");
-//     return res.status(401).json({ message: "Token not found" });
-//   }
-
-//   try {
-//     // console.log('Attempting to verify and decode the token...');
-//     const decodedToken = jwt.verify(tokenCookie, secret);
-
-//     // Extract relevant information if needed
-//     // console.log('Token verification successful. Decoded Token:', decodedToken);
-
-//     res.json({ decodedToken });
-//   } catch (error) {
-//     console.error("Token Verification Error:", error);
-//     console.log(
-//       "Sending 401 Unauthorized response due to token verification error."
-//     );
-//     res.status(401).json({ message: "Invalid token" });
-//   }
-// });
-
 app.get("/api/get-user-data", async (req, res) => {
   try {
     const tokenCookie = req.cookies.jwt;
@@ -376,21 +304,17 @@ app.get("/api/get-user-data", async (req, res) => {
     }
 
     try {
-      // Verify and decode the JWT token
       const decodedToken = jwt.verify(tokenCookie, secret);
       const currentTimestamp = Math.floor(Date.now() / 1000);
       if (decodedToken.exp < currentTimestamp) {
         return res.status(401).json({ error: "Token expired" });
       }
-      // You can now use the decoded token data
+
       res.json({ username: decodedToken.username, email: decodedToken.email });
     } catch (error) {
-      // Handle token verification errors
       if (error.name === "TokenExpiredError") {
-        // Token has expired
         return res.status(401).json({ error: "Token expired" });
       } else {
-        // Other token verification errors
         console.error("Error verifying token:", error);
         return res.status(401).json({ error: "Invalid token" });
       }
@@ -437,10 +361,8 @@ app.get("/api/news/details/:id", async (req, res) => {
     res.json({ newsArticle });
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      // Token has expired, send 401 Unauthorized response
       res.status(401).json({ error: "Token expired" });
     } else {
-      // Other token verification errors
       console.error("Error verifying token:", error);
       res.status(500).json({ error: "Internal server error" });
     }
@@ -469,10 +391,8 @@ app.post("/api/news/favorites/:id", async (req, res) => {
       res.json({ articleId });
     } catch (error) {
       if (error.name === "TokenExpiredError") {
-        // Token has expired
         return res.status(401).json({ error: "Token expired" });
       } else {
-        // Other token verification errors
         console.error("Error verifying token:", error);
         return res.status(401).json({ error: "Invalid token" });
       }
@@ -505,10 +425,8 @@ app.get("/api/news/favorites", async (req, res) => {
       res.json(articles);
     } catch (error) {
       if (error.name === "TokenExpiredError") {
-        // Token has expired
         return res.status(401).json({ error: "Token expired" });
       } else {
-        // Other token verification errors
         console.error("Error verifying token:", error);
         return res.status(401).json({ error: "Invalid token" });
       }
@@ -524,37 +442,29 @@ app.get("/api/news/edit/:id", async (req, res) => {
     const articleId = req.params.id;
     const tokenCookie = req.cookies.jwt;
 
-    // Check if token is present
     if (!tokenCookie) {
       return res.status(401).json({ error: "Token not found" });
     }
 
     try {
-      // Verify the token
       const decodedToken = jwt.verify(tokenCookie, secret);
 
-      // You might also want to check if the token has expired
       const currentTimestamp = Math.floor(Date.now() / 1000);
       if (decodedToken.exp < currentTimestamp) {
         return res.status(401).json({ error: "Token expired" });
       }
 
-      // Token is valid, continue processing
       const newsArticle = await NewsArticle.findById(articleId);
       res.json({ newsArticle });
     } catch (error) {
-      // Token verification failed
       if (error.name === "TokenExpiredError") {
-        // Token has expired
         return res.status(401).json({ error: "Token expired" });
       } else {
-        // Other token verification errors
         console.error("Error verifying token:", error);
         return res.status(401).json({ error: "Invalid token" });
       }
     }
   } catch (error) {
-    // Other server-side errors
     console.error("Error retrieving news article:", error);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -581,7 +491,7 @@ app.put("/api/news/edit/:id", async (req, res) => {
     const newsArticle = await NewsArticle.findByIdAndUpdate(
       articleId,
       formData,
-      { new: true, runValidators: true } // To ensure Mongoose validators are run
+      { new: true, runValidators: true }
     );
 
     res.json({ success: true, newsArticle });
@@ -604,7 +514,6 @@ app.delete("/api/news/delete/:id", async (req, res) => {
     const articleId = req.params.id;
     const tokenCookie = req.cookies.jwt;
 
-    // Check if token is present
     if (!tokenCookie) {
       return res.status(401).json({ error: "Token not found" });
     }
@@ -612,7 +521,6 @@ app.delete("/api/news/delete/:id", async (req, res) => {
     try {
       const decodedToken = jwt.verify(tokenCookie, secret);
 
-      // You might also want to check if the token has expired
       const currentTimestamp = Math.floor(Date.now() / 1000);
       if (decodedToken.exp < currentTimestamp) {
         return res.status(401).json({ error: "Token expired" });
@@ -626,10 +534,8 @@ app.delete("/api/news/delete/:id", async (req, res) => {
       res.json({ success: true, deletedArticle });
     } catch (error) {
       if (error.name === "TokenExpiredError") {
-        // Token has expired, send 401 Unauthorized response
         res.status(401).json({ error: "Token expired" });
       } else {
-        // Other token verification errors
         console.error("Error verifying token:", error);
         res.status(500).json({ error: "Internal server error" });
       }
