@@ -1,0 +1,5 @@
+I decided for my Angular project to make an auto news blog app called AutoInsight. You can use it to read articles as a guest and further extend your usability by registering and logging in. When you do this you can start creating your own articles, edit and delete them if you want to. You also get profile page to view your profile info as well as favorites page where after you favor another user's article of course you get to see them in one place.
+
+For my architecture starting with the front-end I chose to go modular, implement reusable methods through services and add guards to prevent user from feeling 'too free' in the app. Authentication and authorization is happening thanks to JWTs stored in cookies. I used standard HTML and CSS to keep it simple. Back-end is made up of Node.js and MongoDB. I have used all CRUD operations, schemas for validating data, error handling through error codes and bcrypt for hashing the passwords.
+
+* When downloaded from GitHub the project needs 'npm install --force'
