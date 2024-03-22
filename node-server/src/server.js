@@ -619,6 +619,10 @@ app.delete("/api/news/delete/:id", async (req, res) => {
       }
 
       const deletedArticle = await NewsArticle.findByIdAndDelete(articleId);
+      await User.updateMany(
+        { favorites: articleId },
+        { $pull: { favorites: articleId } }
+      );
       res.json({ success: true, deletedArticle });
     } catch (error) {
       if (error.name === "TokenExpiredError") {

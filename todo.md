@@ -2,6 +2,7 @@
 - Add cookie service
 - Sort articles from newest to oldest (timestamps)
 - Refactor
-- Fix inconsistent styling
+- Fix styling
 - Brief documentation on the project and project architecture (here)
-- ON LAST COMMIT DELETE NODE MODULES FOLDER
+
+* When downloaded from GitHub the project needs 'npm install --force'
