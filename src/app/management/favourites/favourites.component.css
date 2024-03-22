@@ -1,3 +1,9 @@
+.car-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .car-card {
     display: flex;
     flex-direction: column;

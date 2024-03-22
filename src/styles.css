@@ -52,6 +52,9 @@ button,
     margin-bottom: 10px;
     font-weight: bold;
     transition: color 0.3s ease-in-out;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px
 }
 
 .read-more:hover,
