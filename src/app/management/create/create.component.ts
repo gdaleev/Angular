@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class CreateComponent {
   articles: any[] = [];
   newArticle: any = {};
-  errorMessage: string | null = null; // Error message to display to the user
+  errorMessage: string | null = null; 
   
   constructor(private newsService: NewsService, private router: Router) {}
 
@@ -28,10 +28,8 @@ export class CreateComponent {
       },
       (error: any) => {
         if (Array.isArray(error)) {
-          // If the error is an array of validation errors, join them into a single string
           this.errorMessage = error[error.length - 1];
         } else {
-          // For other errors, display the generic error message
           this.errorMessage = 'Failed to add news article. Please try again.';
         }
       }

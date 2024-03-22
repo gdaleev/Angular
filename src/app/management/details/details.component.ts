@@ -54,17 +54,15 @@ export class DetailsComponent implements OnInit{
       () => {
         console.log('Article added to favorites successfully');
         this.isFavoredByUser = true;
-        // Optionally, update the component state or UI to reflect the change
       },
       (error) => {
         console.error('Error adding article to favorites', error);
-        // Handle the error (show a message, log, etc.)
       }
     );
   }
 
   updateFavoriteStatus() {
-    this.isFavoredByUser = true; // Assuming you have a property to track if the article is favorited by the user
+    this.isFavoredByUser = true;
   }
 
   deleteArticle(): void {

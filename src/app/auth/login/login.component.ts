@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Subscription } from 'rxjs';
-// import { jwtDecode } from "jwt-decode";
-import { TokenService } from '../token.service';
 import { Router } from '@angular/router';
 import { ErrorMessageService } from 'src/app/error-message.service';
 
@@ -17,7 +15,7 @@ export class LoginComponent implements OnInit{
   expiredJwtError: string = '';
   errorMessage: string | null = null;
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private router: Router, private errorMessageService: ErrorMessageService) {}
+  constructor(private authService: AuthService, private router: Router, private errorMessageService: ErrorMessageService) {}
 
   ngOnInit(): void {
     this.errorMessageService.errorMessage$.subscribe(message => {

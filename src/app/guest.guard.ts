@@ -1,16 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import {jwtDecode} from 'jwt-decode'; // Import jwt-decode library
-import { AuthService } from './auth/auth.service';
-import { ErrorMessageService } from './error-message.service';
-import { Observable } from 'rxjs';
+import { CanActivate, Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class GuestGuard implements CanActivate {
   constructor(private router: Router) {}
-  // return true;
   canActivate(): boolean {
     if (!this.isAuthenticated()) {
       return true;

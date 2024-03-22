@@ -1,23 +1,18 @@
 <section class="container details">
   <div *ngIf="article">
-    <!-- <h2>DETAILS</h2> -->
     <img [src]="article.imgUrl" alt="News Image 1" />
-    <!-- Display details of the article -->
     <h3>{{ article.title }}</h3>
     <p>
       {{ article.content }}
     </p>
-  
-    <!-- Edit button linking to the edit page -->
+
     <div *ngIf="isAuthorized; else notAuthorizedBlock">
-      <!-- Content to show when isAuthorized is true -->
       <a routerLink="/edit/{{article._id}}">Edit Article</a>
       <button (click)="deleteArticle()">Delete Article</button>
     </div>
     
     <ng-template #notAuthorizedBlock>
       <div *ngIf="isAuthenticated; else noLinksBlock">
-        <!-- Content to show when isAuthenticated is true -->
         <ng-container *ngIf="!isFavoredByUser; else alreadyFavoredBlock">
           <a (click)="addArticleToFavorites(); updateFavoriteStatus()">Add To Favorites</a>
         </ng-container>
@@ -27,12 +22,8 @@
       </div>
     
       <ng-template #noLinksBlock>
-        <!-- Content to show when neither isAuthorized nor isAuthenticated is true -->
       </ng-template>
     </ng-template>
-    
-    
-    <!-- Delete button (Note: In a real app, this should trigger a confirmation modal) -->
-    
+  
   </div>
 </section>

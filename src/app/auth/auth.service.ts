@@ -18,9 +18,7 @@ export class AuthService {
   authenticationStatus$ = this.authenticationStatusSubject.asObservable();
   private initialLoad = true;
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {
-    // this.token = this.tokenService.getToken();
-  }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   isInitialLoad(): boolean {
     return this.initialLoad;
@@ -39,27 +37,16 @@ export class AuthService {
           error.error &&
           Array.isArray(error.error.error)
         ) {
-          // If the status code is 400 and the error contains validation errors
-          return throwError(error.error.error); // Return validation errors to the component
+          
+          return throwError(error.error.error); 
         } else {
-          // For other errors, simply re-throw the error
+          
           return throwError('Failed to register user. Please try again.');
         }
       })
     );
   }
 
-  // loginUser(userData: any): Observable<any> {
-  //   const loginUrl = `${this.apiUrl}/login`;
-
-  //   return this.http.post<any>(loginUrl, userData, {
-  //     headers: new HttpHeaders({
-  //       'Authorization': `Bearer ${this.token}`
-  //     })
-  //   }).pipe(
-  //     catchError((error) => throwError(error))
-  //   );
-  // }
 
   loginUser(userData: any): Observable<any> {
     const loginUrl = `${this.apiUrl}/login`;
@@ -91,7 +78,6 @@ export class AuthService {
   }
 
   logoutUser(): Observable<any> {
-    // Additional logic for clearing tokens on the server if needed
     this.tokenService.clearToken().subscribe(
       () => {
         this.notifyAuthenticationStatus(false);
@@ -103,16 +89,6 @@ export class AuthService {
     );
 
     return throwError('Logout failed');
-  }
-
-  // Other methods...
-
-  private saveCookie(token: string): void {
-    document.cookie = `jwt=${token}; Path=/;`;
-  }
-
-  private clearCookie(): void {
-    document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   }
 
   private notifyAuthenticationStatus(status: boolean): void {
@@ -127,23 +103,8 @@ export class AuthService {
     });
   }
 
-  // Get user data from localStorage
   getUserData(): Observable<any | null> {
     const userDataUrl = `${this.apiUrl}/get-user-data`;
     return this.http.get<any>(userDataUrl, { withCredentials: true });
   }
-
-  // clearUserData(): void {
-  //   const userDataString = localStorage.getItem('userData');
-  //   localStorage.removeItem('userData');
-  // }
-
-  // decodeToken(token: string): any | null {
-  //   if (token) {
-  //     const decodedToken = jwtDecode(token)
-  //     return decodedToken;
-  //   }
-
-  //   return null
-  // }
 }

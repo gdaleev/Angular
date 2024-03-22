@@ -42,10 +42,8 @@ export class EditComponent implements OnInit {
       },
       (error: any) => {
         if (Array.isArray(error)) {
-          // If the error is an array of validation errors, join them into a single string
           this.errorMessage = error.join(', ');
         } else {
-          // For other errors, display the generic error message
           this.errorMessage = 'Failed to add news article. Please try again.';
         }
       }

@@ -1,5 +1,3 @@
-- On delete the record in the favorites array in the database should also be removed
-- Add cookie service
 - Sort articles from newest to oldest (timestamps)
 - Refactor
 - Fix styling

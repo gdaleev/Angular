@@ -1,14 +1,12 @@
 /* Import Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
-/* Reset Styles for Key Elements */
 body, header, nav, .container, footer {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-/* Body Styles */
 body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
@@ -20,44 +18,6 @@ body {
     width: 100%;
 }
 
-/* Header Styles */
-/* header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #333;
-    color: #fff;
-    padding: 10px 0;
-    text-align: center;
-    width: 100%;
-} */
-
-/* header img {
-    width: 100px;
-    margin-right: 20px;
-} */
-
-/* Navigation Styles */
-/* nav {
-    background-color: #444;
-    padding: 10px;
-    text-align: center;
-    width: 100%;
-}
-
-nav a {
-    text-decoration: none;
-    color: #fff;
-    margin: 0 20px;
-    font-weight: bold;
-    transition: color 0.3s ease-in-out;
-}
-
-nav a:hover {
-    color: #ff9900;
-} */
-
-/* Container Styles */
 .container {
     display: flex;
     flex-direction: column;
@@ -74,59 +34,10 @@ nav a:hover {
     min-height: 70vh;
 }
 
-/* Footer Styles */
-/* footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-    width: 100%;
-    margin-top: auto;
-} */
-
-/* Heading Styles */
-/* h1.header {
-    color: #fff;
-} */
-
 h1, h2, h3 {
     color: #333;
 }
 
-/* Article Styles */
-/* .news-article {
-    width: 100%;
-    max-width: 600px;
-    text-align: center;
-    margin-bottom: 20px;
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    padding: 20px;
-}
-
-.news-article p {
-    margin-bottom: 30px;
-}
-
-.news-article img {
-    width: 100%;
-    max-width: 100%;
-    border-radius: 10px;
-} */
-
-/* .details p {
-    text-align: center;
-    width: 30%;
-    margin-bottom: 30px;
-}
-
-.details img {
-    width: 30%;
-    max-width: 100%;
-    border-radius: 10px;
-} */
-
-/* Button and Link Styles */
 .read-more,
 button,
 .details a,
@@ -143,7 +54,6 @@ button,
     transition: color 0.3s ease-in-out;
 }
 
-/* Hover Styles */
 .read-more:hover,
 button:hover,
 .details a:hover,
@@ -151,7 +61,6 @@ button:hover,
     color: red;
 }
 
-/* Form Styles */
 form {
     text-align: center;
     max-width: 300px;
@@ -178,41 +87,3 @@ form button {
     margin-top: 10px;
     font-size: 14px;
   }
-
-/* Car Card Styles */
-/* .car-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 300px;
-    background-color: #e0e0e0;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 10px;
-}
-
-.car-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px 8px 0 0;
-}
-
-.car-card p {
-    padding-bottom: 20px;
-}
-
-.car-details {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 15px;
-    text-align: center;
-} */
-
-/* .profile img {
-    width: 10%;
-    padding: 20px;
-} */

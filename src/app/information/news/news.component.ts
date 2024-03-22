@@ -16,8 +16,6 @@ interface Article {
 export class NewsComponent implements OnInit {
   articles!: any[];
   article!: Article;
-  // articles: any[] = [];
-  // newArticle: any = {};
 
   constructor(private newsService: NewsService) {}
 

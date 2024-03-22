@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { jwtDecode } from 'jwt-decode';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, catchError, map, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,12 +11,8 @@ export class TokenService {
 
   constructor(private http: HttpClient) {}
 
-  // ? saveCookie and removeCookie in a separate service
-
   saveCookie(token: string): void {
     document.cookie = `jwt=${token}; Path=/;`;
-    // const decodedToken = jwtDecode(token);
-    //localStorage.setItem('userData', JSON.stringify(decodedToken));
   }
 
   clearToken(): Observable<any> {
@@ -30,18 +25,12 @@ export class TokenService {
     const options = {
       withCredentials: true,
       headers: {
-        'Initial-Load': isInitialLoad ? 'true' : 'false' // Indicate whether it's the initial load
+        'Initial-Load': isInitialLoad ? 'true' : 'false' 
       }
     };
   
     return this.http.get(`${this.apiUrl}/get-token`, options);
   }
-
-  // getToken(): Observable<any> {
-  //   const options = { withCredentials: true }; // Include withCredentials option
-
-  //   return this.http.get(`${this.apiUrl}/get-token`, options);
-  // }
 
   setTokenExpiration(decodedTokenExp: any): void {
     const currentTimestamp = Math.floor(Date.now() / 1000);

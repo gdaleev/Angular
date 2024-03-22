@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import {jwtDecode} from 'jwt-decode'; // Import jwt-decode library
+import {jwtDecode} from 'jwt-decode'; 
 import { AuthService } from './auth/auth.service';
 import { ErrorMessageService } from './error-message.service';
 
@@ -14,7 +14,6 @@ export class AuthGuard implements CanActivate {
     const token = this.getCookie('jwt');
 
     if (!token) {
-      // If token is not found, redirect to login
       this.authService.logoutUser()
       this.errorMessageService.setErrorMessage('Your session has expired. Please log in again.')
       this.router.navigate(['/login']);
@@ -23,17 +22,14 @@ export class AuthGuard implements CanActivate {
 
     const decodedToken: any = jwtDecode(token);
 
-    // Check if the token is expired
     const currentTime = Math.floor(Date.now() / 1000);
     if (decodedToken.exp < currentTime) {
-      // Token expired, redirect to login
       this.authService.logoutUser()
       this.errorMessageService.setErrorMessage('Your session has expired. Please log in again.')
       this.router.navigate(['/login']);
       return false;
     }
-
-    // Token is valid, allow access
+    
     return true;
   }
 

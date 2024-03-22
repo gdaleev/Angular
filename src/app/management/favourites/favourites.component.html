@@ -3,7 +3,6 @@
     <div *ngIf="!articles || articles.length === 0">
       <h2>You still haven't added articles to Favorites</h2>
     </div>
-    <!-- Fetch and display user's favorite cars from the backend -->
     <div *ngIf="articles && articles.length > 0">
       <div *ngFor="let article of articles" class="car-card">
         <img
@@ -19,5 +18,4 @@
         </div>
       </div>
     </div>
-    <!-- Add more favorite cars as needed -->
   </section>

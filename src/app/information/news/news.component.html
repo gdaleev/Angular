@@ -7,12 +7,10 @@
     <img src="{{ article.imgUrl }}" alt="news-img" />
     <h3>{{ article.title }}</h3>
     <p class="article-meta">
-      <!-- Published on January 15, 2024 by Auto News Team -->
     </p>
     <p>
       {{ article.content.slice(0, 30) + '...' }}
     </p>
-    <!-- <a href="#" class="read-more">Read More</a> -->
     <a (click)="getNewsArticleDetails(article._id)" routerLink="/details/{{article._id}}" class="read-more">Read More</a>
   </div>
 </section>
