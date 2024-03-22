@@ -32,31 +32,34 @@ mongoose.connect("mongodb://127.0.0.1:27017/auto-insight");
 
 app.use(bodyParser.json());
 
-const newsArticleSchema = new mongoose.Schema({
-  imgUrl: {
-    type: String,
-    required: [true, "Image URL is required!"],
-    match: [
-      /^https?:\/\/.*\.(?:png|jpg|gif|jpeg)$/,
-      "Please provide a valid image URL!",
-    ],
+const newsArticleSchema = new mongoose.Schema(
+  {
+    imgUrl: {
+      type: String,
+      required: [true, "Image URL is required!"],
+      match: [
+        /^https?:\/\/.*\.(?:png|jpg|gif|jpeg)$/,
+        "Please provide a valid image URL!",
+      ],
+    },
+    title: {
+      type: String,
+      required: [true, "Title is required!"],
+      minlength: [5, "Title must be at least 5 characters long!"],
+    },
+    content: {
+      type: String,
+      required: [true, "Content is required!"],
+      minlength: [20, "Content must be at least 20 characters long!"],
+    },
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "Owner ID is required"],
+    },
   },
-  title: {
-    type: String,
-    required: [true, "Title is required!"],
-    minlength: [5, "Title must be at least 5 characters long!"],
-  },
-  content: {
-    type: String,
-    required: [true, "Content is required!"],
-    minlength: [20, "Content must be at least 20 characters long!"],
-  },
-  ownerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: [true, "Owner ID is required"],
-  },
-});
+  { timestamps: true }
+);
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -131,8 +134,19 @@ const NewsArticle = mongoose.model("NewsArticle", newsArticleSchema);
 const User = mongoose.model("User", userSchema);
 
 app.get("/api/news", async (req, res) => {
-  const newsArticles = await NewsArticle.find();
-  res.json(newsArticles);
+  // const newsArticles = await NewsArticle.find();
+  // res.json(newsArticles);
+
+  try {
+    const newsArticles = await NewsArticle.find()
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .lean();
+    res.json(newsArticles);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.post("/api/news", async (req, res) => {
