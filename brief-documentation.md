@@ -3,3 +3,4 @@ I decided for my Angular project to make an auto news blog app called AutoInsigh
 For my architecture starting with the front-end I chose to go modular, implement reusable methods through services and add guards to prevent user from feeling 'too free' in the app. Authentication and authorization is happening thanks to JWTs stored in cookies. I used standard HTML and CSS to keep it simple. Back-end is made up of Node.js and MongoDB. I have used all CRUD operations, schemas for validating data, error handling through error codes and bcrypt for hashing the passwords.
 
 * When downloaded from GitHub the project needs 'npm install --force'
+* To start the server navigate to node-server folder and then run 'node src/server.js' 
